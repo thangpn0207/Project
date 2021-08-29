@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:app_web_project/core/blocs/authentication_cubit/authentication_cubit.dart';
 import 'package:app_web_project/core/blocs/loading_cubit/loading_cubit.dart';
@@ -22,19 +23,21 @@ class ProfileCubit extends Cubit<ProfileState> {
   Repository repository;
   SnackBarCubit snackBarCubit;
 
-  ProfileCubit(this.repository, this.snackBarCubit, this.loadingCubit) : super(ProfileState(
-      isMe: true, isSelectImage: false, userModel: UserModel(id: """
+  ProfileCubit(this.repository, this.snackBarCubit, this.loadingCubit)
+      : super(ProfileState(
+            isMe: true, isSelectImage: false, userModel: UserModel(id: """
 """, email: '', displayName: '', imgUrl: '')));
 
-      Future<void>getUserinfo(String userId) async {
+  Future<void> getUserinfo(String userId) async {
     try {
       final user = await repository.getUser(userId);
 
       if (user != null) {
-        String? myId = await SPrefUtil.instance.getString(
-            SPrefConstants.userId);
+        String? myId =
+            await SPrefUtil.instance.getString(SPrefConstants.userId);
         loadingCubit.hideLoading();
-        emit(state.copyWith(userModel: user, isMe: myId == user.id,isSelectImage: false));
+        emit(state.copyWith(
+            userModel: user, isMe: myId == user.id, isSelectImage: false));
       } else {
         loadingCubit.hideLoading();
         snackBarCubit.showSnackBar(
@@ -53,56 +56,59 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> uploadImgToDB(PickImageType type, UserModel userModel) async {
     if (kIsWeb) {
       PickedFile? pickedFile =
-      await ImagePicker().getImage(source: ImageSource.gallery);
+          await ImagePicker().getImage(source: ImageSource.gallery);
       if (pickedFile != null) {
-        final File imageFile = File(pickedFile.path);
+        Uint8List? file =await pickedFile.readAsBytes();
         loadingCubit.showLoading();
-        String? imgSrc = await repository.sendImgToDB(imageFile);
+        String? imgSrc = await repository.sendImgToDBWeb(file);
         if (imgSrc != null) {
-          loadingCubit.hideLoading();
-          ImageModel imageModel = ImageModel(imageTs: DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString(), imageUrl: imgSrc);
+          ImageModel imageModel = ImageModel(
+              imageTs: DateTime.now().millisecondsSinceEpoch.toString(),
+              imageUrl: imgSrc);
           try {
             await repository.sendPhotoToDb(
                 userModel.id ?? '', imageModel, userModel.photos ?? 0);
+            loadingCubit.hideLoading();
             snackBarCubit.showSnackBar(SnackBarType.success, 'Upload Success');
             await getUserinfo(userModel.id ?? "");
           } catch (e) {
+            loadingCubit.hideLoading();
             snackBarCubit.showSnackBar(SnackBarType.error, e.toString());
           }
         } else {
-          snackBarCubit.showSnackBar(SnackBarType.error, 'Can not pick image');
+          loadingCubit.hideLoading();
+          snackBarCubit.showSnackBar(SnackBarType.error, 'Can not pick image2');
         }
       } else {
-        snackBarCubit.showSnackBar(SnackBarType.error, 'Can not pick image');
+        loadingCubit.hideLoading();
+        snackBarCubit.showSnackBar(SnackBarType.error, 'Can not pick image1');
       }
     } else {
       switch (type) {
         case PickImageType.camera:
           PickedFile? pickedFile =
-          await ImagePicker().getImage(source: ImageSource.camera);
+              await ImagePicker().getImage(source: ImageSource.camera);
           if (pickedFile != null) {
             final File imageFile = File(pickedFile.path);
             loadingCubit.showLoading();
             String? imgSrc = await repository.sendImgToDB(imageFile);
             if (imgSrc != null) {
-              loadingCubit.hideLoading();
-              ImageModel imageModel = ImageModel(imageTs: DateTime
-                  .now()
-                  .millisecondsSinceEpoch
-                  .toString(), imageUrl: imgSrc);
+              ImageModel imageModel = ImageModel(
+                  imageTs: DateTime.now().millisecondsSinceEpoch.toString(),
+                  imageUrl: imgSrc);
               try {
                 await repository.sendPhotoToDb(
                     userModel.id ?? '', imageModel, userModel.photos ?? 0);
+                loadingCubit.hideLoading();
                 snackBarCubit.showSnackBar(
                     SnackBarType.success, 'Upload Success');
                 await getUserinfo(userModel.id ?? "");
               } catch (e) {
+                loadingCubit.hideLoading();
                 snackBarCubit.showSnackBar(SnackBarType.error, e.toString());
               }
             } else {
+              loadingCubit.hideLoading();
               snackBarCubit.showSnackBar(
                   SnackBarType.error, 'Can not pick image');
             }
@@ -114,31 +120,33 @@ class ProfileCubit extends Cubit<ProfileState> {
           break;
         case PickImageType.gallery:
           PickedFile? pickedFile =
-          await ImagePicker().getImage(source: ImageSource.gallery);
+              await ImagePicker().getImage(source: ImageSource.gallery);
           if (pickedFile != null) {
             final File imageFile = File(pickedFile.path);
             loadingCubit.showLoading();
             String? imgSrc = await repository.sendImgToDB(imageFile);
             if (imgSrc != null) {
-              loadingCubit.hideLoading();
-              ImageModel imageModel = ImageModel(imageTs: DateTime
-                  .now()
-                  .millisecondsSinceEpoch
-                  .toString(), imageUrl: imgSrc);
+              ImageModel imageModel = ImageModel(
+                  imageTs: DateTime.now().millisecondsSinceEpoch.toString(),
+                  imageUrl: imgSrc);
               try {
                 await repository.sendPhotoToDb(
                     userModel.id ?? '', imageModel, userModel.photos ?? 0);
+                loadingCubit.hideLoading();
                 snackBarCubit.showSnackBar(
                     SnackBarType.success, 'Upload Success');
                 await getUserinfo(userModel.id ?? "");
               } catch (e) {
+                loadingCubit.hideLoading();
                 snackBarCubit.showSnackBar(SnackBarType.error, e.toString());
               }
             } else {
+              loadingCubit.hideLoading();
               snackBarCubit.showSnackBar(
                   SnackBarType.error, 'Can not pick image');
             }
           } else {
+            loadingCubit.hideLoading();
             snackBarCubit.showSnackBar(
                 SnackBarType.error, 'Can not pick image');
           }

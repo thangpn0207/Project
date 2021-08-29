@@ -81,6 +81,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
                   SnackBarType.error, "Cannot upload photo from your phone");
             }
           } else {
+            loadingCubit.hideLoading();
             snackBarCubit.showSnackBar(
                 SnackBarType.error, "Cannot take photo from your phone");
           }
@@ -113,6 +114,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
                     SnackBarType.error, "Cannot upload photo from your phone");
               }
             } else {
+              loadingCubit.hideLoading();
               snackBarCubit.showSnackBar(
                   SnackBarType.error, "Cannot take photo from your phone");
             }
@@ -142,7 +144,8 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
                       "Cannot upload photo from your phone");
                 }
               } else {
-                snackBarCubit.showSnackBar(
+                    loadingCubit.hideLoading();
+                    snackBarCubit.showSnackBar(
                     SnackBarType.error, "Cannot take photo from your phone");
               }
             });

@@ -40,11 +40,15 @@ class _DrawProfileState extends State<DrawProfile> {
             child: CachedNetworkImage(
               imageUrl: widget.userModel.imgUrl!.replaceAll('///', '//'),
               imageBuilder: (context, imageProvider) => Container(
-                  height: 85.h,
-                  width: 85.h,
-                  child: CircleAvatar(
-                    backgroundImage: imageProvider,
-                  )),
+                height: 85.h,
+                width: 85.h,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: imageProvider,
+                    )
+                ),
+              ),
               placeholder: (context, url) => Container(
                 transform: Matrix4.translationValues(0, 0, 0),
                 child: Container(

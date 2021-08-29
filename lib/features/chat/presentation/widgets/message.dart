@@ -4,6 +4,7 @@ import 'package:app_web_project/features/chat/presentation/blocs/message_bloc/me
 import 'package:app_web_project/features/chat/presentation/blocs/message_bloc/message_state.dart';
 import 'package:app_web_project/features/profile/presentation/pages/profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,11 +43,15 @@ class MessageItem extends StatelessWidget {
                           imageUrl:
                               state.userModel.imgUrl!.replaceAll('///', '//'),
                           imageBuilder: (context, imageProvider) => Container(
-                          height:40.h,
-                          width: 40.h,
-                          child: CircleAvatar(
-                          backgroundImage: imageProvider,
-                          )),
+                            height: 40.h,
+                            width: 40.h,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                )
+                            ),
+                          ),
                           placeholder: (context, url) => Container(
                             transform: Matrix4.translationValues(0, 0, 0),
                             child: Container(
@@ -144,7 +149,7 @@ class MessageItem extends StatelessWidget {
           errorWidget: (context, url, error) => new Icon(Icons.error),
           width: 60.w,
           height: 80.h,
-          fit: BoxFit.cover,
+          fit: kIsWeb?BoxFit.fill:BoxFit.cover,
         ),
       ),
     );

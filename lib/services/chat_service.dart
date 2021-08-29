@@ -113,6 +113,6 @@ class   ChatService {
     return await _repository.sendImageToUserInChatRoom(croppedFile, chatID);
   }
   Future<String?> sendPhotoMessageFromWeb(croppedFile,chatID)async {
-    return await _repository.sendImageToUserInChatRoom(croppedFile, chatID);
+    return await _repository.sendImageToUserInChatRoomWeb(croppedFile, chatID);
   }
 }

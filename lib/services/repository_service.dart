@@ -334,6 +334,27 @@ class Repository {
       return null;
     }
   }
+  Future<String?> sendImageToUserInChatRoomWeb(croppedFile, chatID) async {
+    try {
+      String imageTimeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+      String filePath = 'chatrooms/$chatID/$imageTimeStamp';
+      try {
+        await firebase_storage.FirebaseStorage.instance
+            .ref(filePath)
+            .putData(croppedFile);
+      } on firebase_core.FirebaseException catch (e) {
+        print('upload image exception, code is ${e.code}');
+        return null;
+        // e.g, e.code == 'canceled'
+      }
+      return await firebase_storage.FirebaseStorage.instance
+          .ref(filePath)
+          .getDownloadURL();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
   Future<String?> sendImgToDB(croppedFile) async {
     try {
       String imageTimeStamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -351,6 +372,28 @@ class Repository {
           .ref(filePath)
           .getDownloadURL();
     } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+  Future<String?> sendImgToDBWeb(croppedFile) async {
+    try {
+      String imageTimeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+      String filePath = 'user/$imageTimeStamp';
+      try {
+        await firebase_storage.FirebaseStorage.instance
+            .ref(filePath)
+            .putData(croppedFile);
+      } on firebase_core.FirebaseException catch (e) {
+        print('upload image exception, code is ${e.code}');
+        return null;
+        // e.g, e.code == 'canceled'
+      }
+      return await firebase_storage.FirebaseStorage.instance
+          .ref(filePath)
+          .getDownloadURL();
+    } catch (e) {
+      print(e.toString());
       return null;
     }
   }

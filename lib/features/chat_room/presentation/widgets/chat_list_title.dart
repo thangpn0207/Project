@@ -17,11 +17,15 @@ class ChatTitle extends StatelessWidget {
           CachedNetworkImage(
             imageUrl: chatRoomInfo.imgUrl!.replaceAll('///', '//'),
             imageBuilder: (context, imageProvider) => Container(
-                height: 50.h,
-                width: 50.h,
-                child: CircleAvatar(
-                  backgroundImage: imageProvider,
-                )),
+              height: 50.h,
+              width: 50.h,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: imageProvider,
+                  )
+              ),
+            ),
             placeholder: (context, url) => Container(
               transform: Matrix4.translationValues(0, 0, 0),
               child: Container(

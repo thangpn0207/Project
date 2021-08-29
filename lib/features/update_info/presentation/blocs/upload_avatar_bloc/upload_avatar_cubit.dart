@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:app_web_project/core/blocs/loading_cubit/loading_cubit.dart';
 import 'package:app_web_project/core/blocs/snack_bar_cubit/snack_bar_cubit.dart';
@@ -28,16 +29,18 @@ class UploadAvatarCubit extends Cubit<UploadAvatarState> {
       PickedFile? pickedFile =
           await ImagePicker().getImage(source: ImageSource.gallery);
       if (pickedFile != null) {
-        final File imageFile = File(pickedFile.path);
+        Uint8List? file =await pickedFile.readAsBytes();
         loadingCubit.showLoading();
-        String? imgSrc = await repository.sendImgToDB(imageFile);
+        String? imgSrc = await repository.sendImgToDBWeb(file);
         if (imgSrc != null) {
           loadingCubit.hideLoading();
           emit(state.copyWith(imgSrc));
         } else {
+          loadingCubit.hideLoading();
           snackBarCubit.showSnackBar(SnackBarType.error, 'Can not pick image');
         }
       } else {
+        loadingCubit.hideLoading();
         snackBarCubit.showSnackBar(SnackBarType.error, 'Can not pick image');
       }
     } else {
@@ -53,10 +56,12 @@ class UploadAvatarCubit extends Cubit<UploadAvatarState> {
               loadingCubit.hideLoading();
               emit(state.copyWith(imgSrc));
             } else {
+              loadingCubit.showLoading();
               snackBarCubit.showSnackBar(
                   SnackBarType.error, 'Can not pick image');
             }
           } else {
+            loadingCubit.showLoading();
             snackBarCubit.showSnackBar(
                 SnackBarType.error, 'Can not pick image');
           }
@@ -73,10 +78,12 @@ class UploadAvatarCubit extends Cubit<UploadAvatarState> {
               loadingCubit.hideLoading();
               emit(state.copyWith(imgSrc));
             } else {
+              loadingCubit.showLoading();
               snackBarCubit.showSnackBar(
                   SnackBarType.error, 'Can not pick image');
             }
           } else {
+            loadingCubit.showLoading();
             snackBarCubit.showSnackBar(
                 SnackBarType.error, 'Can not pick image');
           }
