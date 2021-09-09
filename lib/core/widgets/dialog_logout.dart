@@ -43,7 +43,7 @@ class DialogLogOut extends StatelessWidget {
           //   height: 100.h,
           //   child: Image(image: AssetImage('assets/icons/img.png')),
           // ),
-          SizedBox(height: 25.h,),
+          SizedBox(height: 20.h,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

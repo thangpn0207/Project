@@ -60,43 +60,47 @@ class _BottomProfileState extends State<BottomProfile> {
                         : 0,
                     itemBuilder: (_, index) {
                       ImageModel image = state.listImage![index];
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.black12,
+                      return Hero(
+                        transitionOnUserGestures: true,
+                        tag: image.imageUrl.replaceAll('///', '//'),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.black12,
 
-                        ),
-                        child: InkWell(
-                          onTap: (){
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FullPhoto(url: image.imageUrl.replaceAll('///', '//'))));
-                          },
-                          child: CachedNetworkImage(
-                            imageUrl:image.imageUrl.replaceAll('///', '//'),
-                            imageBuilder: (context, imageProvider) => Container(
-                              height: 55.h,
-                              width: 45.w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(15)),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit:kIsWeb?BoxFit.contain:BoxFit.fill,
+                          ),
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FullPhoto(url: image.imageUrl.replaceAll('///', '//'))));
+                            },
+                            child: CachedNetworkImage(
+                              imageUrl:image.imageUrl.replaceAll('///', '//'),
+                              imageBuilder: (context, imageProvider) => Container(
+                                height: 55.h,
+                                width: 45.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit:kIsWeb?BoxFit.contain:BoxFit.fill,
+                                  ),
                                 ),
                               ),
+                              placeholder: (context, url) => Container(
+                                transform: Matrix4.translationValues(0, 0, 0),
+                                child: Container(
+                                    width: 55.w,
+                                    height: 55.h,
+                                    child: Center(child: new CircularProgressIndicator())),
+                              ),
+                              errorWidget: (context, url, error) => new Icon(Icons.error),
+                              width: 55.w,
+                              height: 55.h,
+                              fit: BoxFit.cover,
                             ),
-                            placeholder: (context, url) => Container(
-                              transform: Matrix4.translationValues(0, 0, 0),
-                              child: Container(
-                                  width: 55.w,
-                                  height: 55.h,
-                                  child: Center(child: new CircularProgressIndicator())),
-                            ),
-                            errorWidget: (context, url, error) => new Icon(Icons.error),
-                            width: 55.w,
-                            height: 55.h,
-                            fit: BoxFit.cover,
                           ),
                         ),
                       );

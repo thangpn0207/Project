@@ -126,30 +126,34 @@ class MessageItem extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => FullPhoto(url: imageUrlFromFB)));
         },
-        child: CachedNetworkImage(
-          imageUrl: imageUrlFromFB,
-          imageBuilder: (context, imageProvider) => Container(
-            height: 160.h,
-            width: 160.w,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
+        child: Hero(
+          transitionOnUserGestures: true,
+          tag: imageUrlFromFB,
+          child: CachedNetworkImage(
+            imageUrl: imageUrlFromFB,
+            imageBuilder: (context, imageProvider) => Container(
+              height: 160.h,
+              width: 160.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
+            placeholder: (context, url) => Container(
+              transform: Matrix4.translationValues(0, 0, 0),
+              child: Container(
+                  width: 60.w,
+                  height: 80.h,
+                  child: Center(child: new CircularProgressIndicator())),
+            ),
+            errorWidget: (context, url, error) => new Icon(Icons.error),
+            width: 60.w,
+            height: 80.h,
+            fit: kIsWeb?BoxFit.fill:BoxFit.cover,
           ),
-          placeholder: (context, url) => Container(
-            transform: Matrix4.translationValues(0, 0, 0),
-            child: Container(
-                width: 60.w,
-                height: 80.h,
-                child: Center(child: new CircularProgressIndicator())),
-          ),
-          errorWidget: (context, url, error) => new Icon(Icons.error),
-          width: 60.w,
-          height: 80.h,
-          fit: kIsWeb?BoxFit.fill:BoxFit.cover,
         ),
       ),
     );

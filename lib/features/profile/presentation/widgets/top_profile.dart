@@ -38,29 +38,33 @@ class TopProfile extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => FullPhoto(url: userModel.imgUrl!.replaceAll('///', '//'))));
               },
-              child: CachedNetworkImage(
-                imageUrl:url.replaceAll('///', '//'),
-                imageBuilder: (context, imageProvider) => Container(
-                  height: 85.h,
-                  width: 85.h,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: imageProvider,
-                      )
+              child: Hero(
+                transitionOnUserGestures: true,
+                tag: url.replaceAll('///', '//'),
+                child: CachedNetworkImage(
+                  imageUrl:url.replaceAll('///', '//'),
+                  imageBuilder: (context, imageProvider) => Container(
+                    height: 85.h,
+                    width: 85.h,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: imageProvider,
+                        )
+                    ),
                   ),
+                  placeholder: (context, url) => Container(
+                    transform: Matrix4.translationValues(0, 0, 0),
+                    child: Container(
+                        width: 85.w,
+                        height: 85.h,
+                        child: Center(child: new CircularProgressIndicator())),
+                  ),
+                  errorWidget: (context, url, error) => new Icon(Icons.error),
+                  width: 85.w,
+                  height: 85.h,
+                  fit: BoxFit.cover,
                 ),
-                placeholder: (context, url) => Container(
-                  transform: Matrix4.translationValues(0, 0, 0),
-                  child: Container(
-                      width: 85.w,
-                      height: 85.h,
-                      child: Center(child: new CircularProgressIndicator())),
-                ),
-                errorWidget: (context, url, error) => new Icon(Icons.error),
-                width: 85.w,
-                height: 85.h,
-                fit: BoxFit.cover,
               ),
             ),
             SizedBox(

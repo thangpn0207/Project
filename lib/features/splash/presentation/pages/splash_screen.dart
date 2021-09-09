@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     authenticationCubit = inject<AuthenticationCubit>();
-    Timer(Duration(seconds: 0), () {
+    Timer(Duration(seconds: 2), () {
       Routes.instance.navigateTo(RouteNames.login);
     });
     super.initState();
