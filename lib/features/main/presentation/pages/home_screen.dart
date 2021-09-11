@@ -2,6 +2,7 @@ import 'package:app_web_project/core/blocs/authentication_cubit/authentication_c
 import 'package:app_web_project/core/components/dialog.dart';
 import 'package:app_web_project/core/themes/app_colors.dart';
 import 'package:app_web_project/core/widgets/dialog_logout.dart';
+import 'package:app_web_project/core/widgets/waiting_app.dart';
 import 'package:app_web_project/features/chat_room/presentation/blocs/chat_screen_bloc/chat_screen_bloc.dart';
 import 'package:app_web_project/features/chat_room/presentation/pages/chat_screen.dart';
 import 'package:app_web_project/features/main/presentation/blocs/home_cubit.dart';
@@ -116,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
            ),
          );
        }else{
-         return Container(color: Colors.white,);
+         return WaittingApp();
        }
       }),
     );

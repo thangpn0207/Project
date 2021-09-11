@@ -6,6 +6,7 @@ import 'package:app_web_project/core/widgets/dialog_logout.dart';
 import 'package:app_web_project/features/chat/presentation/widgets/full_photo.dart';
 import 'package:app_web_project/features/profile/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -27,7 +28,7 @@ class _DrawProfileState extends State<DrawProfile> {
               fit: BoxFit.cover,
               image: AssetImage(
                   'assets/images/login/Background.png'))),
-      padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 40.h),
+      padding: EdgeInsets.symmetric(horizontal: kIsWeb?5.w:20.w,vertical: 40.h),
       child: Column(
         children: [
           GestureDetector(

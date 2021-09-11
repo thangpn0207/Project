@@ -5,5 +5,6 @@ class RouteNames{
   static const String signUp = '/signUp';
   static const String changePassword = '/changePassword';
   static const String editInfo = '/editInfo';
+  static const String videoCall = '/videoCall';
 
 }

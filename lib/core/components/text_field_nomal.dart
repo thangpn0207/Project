@@ -18,7 +18,7 @@ class TextFieldNormal extends StatelessWidget {
           labelText: labelText,
           labelStyle: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 20.sp
+            fontSize: 16.sp
           )
         ),
       ),

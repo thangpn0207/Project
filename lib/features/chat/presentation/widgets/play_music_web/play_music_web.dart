@@ -51,8 +51,9 @@ class _PlayMusicWebState extends State<PlayMusicWeb>
         builder: (context, state) {
           if (state is AudioWebPlay) {
             return Container(
-                  height: 100.h,
+              height: 120.h,
               padding: EdgeInsets.symmetric(horizontal: 20.w),
+              margin: EdgeInsets.only(bottom: 10.h ),
               child: Column(
                 children: [
                   Align(
@@ -71,8 +72,8 @@ class _PlayMusicWebState extends State<PlayMusicWeb>
                   Row(
                     children: [
                       Container(
-                          height: 75.h,
-                          width: 75.w,
+                          height: 100,
+                          width: 100,
                           child: Container(
                             child: PlayMusicWebAnimation(
                               isPlay: state.isPlaying,

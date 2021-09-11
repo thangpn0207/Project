@@ -7,6 +7,7 @@ import 'package:app_web_project/core/blocs/snack_bar_cubit/snack_bar_cubit.dart'
 import 'package:app_web_project/core/containts/enum_constants.dart';
 import 'package:app_web_project/core/model/chat_message.dart';
 import 'package:app_web_project/core/model/user_model.dart';
+import 'package:app_web_project/features/update_info/presentation/pages/update_info.dart';
 import 'package:app_web_project/services/chat_service.dart';
 import 'package:app_web_project/services/imge_services.dart';
 import 'package:app_web_project/services/repository_service.dart';
@@ -25,7 +26,8 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   final String chatRoomId;
 
   ChatRoomBloc({required this.user, required this.chatRoomId})
-      : super(ChatRoomStateInitial());
+      : super(ChatRoomState(
+            messages: [], isLoading: false, selectSuccess: false));
   ChatService _chatService = inject<ChatService>();
   SnackBarCubit snackBarCubit = inject<SnackBarCubit>();
   LoadingCubit loadingCubit = inject<LoadingCubit>();
@@ -38,13 +40,13 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   Stream<ChatRoomState> mapEventToState(ChatRoomEvent event) async* {
     // TODO: implement mapEventToState
     if (event is ChatRoomLoad) {
-      yield ChatRoomLoading();
+      yield (state.copyWith(isLoading: true));
       chatRoom?.cancel();
       chatRoom = _chatService.getChatMessages(chatRoomId).listen((messages) {
         add(ReceiveMessage(message: messages));
       });
     } else if (event is ReceiveMessage) {
-      yield ChatRoomLoadSuccess(messages: event.message);
+      yield state.copyWith(messages: event.message, isLoading: false);
     } else if (event is SendMessage) {
       ChatMessage message = ChatMessage(
         lastMessageTs: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -72,8 +74,8 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
                 sendBy: user.id ?? '',
                 type: 'image',
               );
-             await _chatService.sendChatMessage(chatRoomId, message);
-             await _chatService.setChatRoomLastMessage(chatRoomId, message);
+              await _chatService.sendChatMessage(chatRoomId, message);
+              await _chatService.setChatRoomLastMessage(chatRoomId, message);
               loadingCubit.hideLoading();
             } else {
               loadingCubit.hideLoading();
@@ -123,9 +125,9 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
             await ImageController.instance
                 .cropImageFromFile()
                 .then((croppedFile) async {
-                  if (croppedFile != null) {
-                    loadingCubit.showLoading();
-                    String? takeImageURL = await _chatService.sendPhotoMessage(
+              if (croppedFile != null) {
+                loadingCubit.showLoading();
+                String? takeImageURL = await _chatService.sendPhotoMessage(
                     croppedFile, chatRoomId);
                 if (takeImageURL != null) {
                   ChatMessage message = ChatMessage(
@@ -136,7 +138,8 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
                     type: 'image',
                   );
                   await _chatService.sendChatMessage(chatRoomId, message);
-                  await _chatService.setChatRoomLastMessage(chatRoomId, message);
+                  await _chatService.setChatRoomLastMessage(
+                      chatRoomId, message);
                   loadingCubit.hideLoading();
                 } else {
                   loadingCubit.hideLoading();
@@ -144,8 +147,8 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
                       "Cannot upload photo from your phone");
                 }
               } else {
-                    loadingCubit.hideLoading();
-                    snackBarCubit.showSnackBar(
+                loadingCubit.hideLoading();
+                snackBarCubit.showSnackBar(
                     SnackBarType.error, "Cannot take photo from your phone");
               }
             });
@@ -155,24 +158,38 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         }
       }
     } else if (event is UploadSong) {
+      loadingCubit.showLoading();
       FilePickerResult? result = await FilePicker.platform
           .pickFiles(type: FileType.audio, withData: true);
       if (result != null) {
-        try{
-          File file = File(result.files.single.path ?? '');
-          Uint8List fileBytes = file.readAsBytesSync();
-          String fileName = result.files.first.name;
-          await repository.uploadFileSong(fileBytes, chatRoomId, fileName);
-          snackBarCubit.showSnackBar(
-              SnackBarType.success, "Upload Success");
-        }catch(e){
-          snackBarCubit.showSnackBar(
-              SnackBarType.error, e.toString());
-        }
-      }else{
+        loadingCubit.hideLoading();
+        yield state.copyWith(selectSuccess: true, filePickerResult: result);
+      } else {
+        loadingCubit.hideLoading();
         snackBarCubit.showSnackBar(
             SnackBarType.error, "Cannot take song from your phone");
       }
+    } else if (event is UploadInfoSong) {
+      try {
+        loadingCubit.showLoading();
+        File file = File(event.filePickerResult?.files.single.path ?? '');
+        Uint8List fileBytes = file.readAsBytesSync();
+        String fileName = event.filePickerResult!.files.first.name;
+        await repository.uploadFileSong(
+            fileBytes, chatRoomId, fileName, event.nameSong, event.nameSinger);
+        loadingCubit.hideLoading();
+        snackBarCubit.showSnackBar(SnackBarType.success, "Upload Success");
+        yield state.copyWith(selectSuccess: false, filePickerResult: null);
+      } catch (e) {
+        loadingCubit.hideLoading();
+        snackBarCubit.showSnackBar(SnackBarType.error, e.toString());
+      }
+    } else if (event is SetUrlSong) {
+      yield state.copyWith(isPlay: true, song: event.song, setSongUrl: false);
+    } else if (event is CloseMusic) {
+      yield state.copyWith(isPlay: false);
+    } else if (event is ImportSongURl) {
+      yield state.copyWith(setSongUrl: true);
     }
   }
 

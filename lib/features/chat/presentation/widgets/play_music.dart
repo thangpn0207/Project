@@ -34,6 +34,7 @@ class _PlayAudioMusicState extends State<PlayAudioMusic> {
     // TODO: implement initState
     audioCubit = inject<AudioCubit>();
     audioCubit.openSong(widget.song, widget.roomUrl);
+    audioCubit.setCallback(widget.callback);
     super.initState();
   }
 
@@ -57,7 +58,9 @@ class _PlayAudioMusicState extends State<PlayAudioMusic> {
                     alignment: Alignment.topRight,
                     child: Container(
                       child: InkWell(
-                        onTap: widget.callback,
+                        onTap:(){
+                          audioCubit.closeAudio();
+                        },
                         child: Icon(
                           Icons.close,
                           color: Colors.black38,
@@ -93,18 +96,6 @@ class _PlayAudioMusicState extends State<PlayAudioMusic> {
                       ],
                     ),
                   ),
-                  // Container(
-                  //   child: Slider(
-                  //       activeColor: Colors.blue,
-                  //       inactiveColor: Colors.grey,
-                  //       value: state.newPosition.inSeconds.toDouble(),
-                  //       min: 0.0,
-                  //       max: state.newDuration.inSeconds.toDouble(),
-                  //       onChanged: (double value) {
-                  //         audioCubit.test(value.toInt());
-                  //         value = value;
-                  //       }),
-                  // ),
                   SliderWidget(
                       audioCubit: audioCubit,
                       animBeginValue: state.newPosition.inSeconds.toDouble(),
