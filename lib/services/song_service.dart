@@ -1,12 +1,9 @@
-import 'dart:io';
-import 'dart:typed_data';
+
 import 'dart:async';
 
 import 'package:app_web_project/core/model/song.dart';
 import 'package:app_web_project/services/repository_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class SongService{
   final Repository _repository;
@@ -25,6 +22,7 @@ class SongService{
         List<Song> result = <Song>[];
         snapShot.docs.forEach((doc) {
           result.add(Song(
+              singerName: doc['singerName'],
               songName: doc['songName'],
               songUrl: doc['songUrl'],
           ));

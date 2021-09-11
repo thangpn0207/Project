@@ -397,7 +397,7 @@ class Repository {
       return null;
     }
   }
-  Future<void> uploadFileSong(file, String chatID,String fileName) async {
+  Future<void> uploadFileSong(file, String chatID,String fileName,String nameSong,String nameSinger) async {
    try{
      try {
        await firebase_storage.FirebaseStorage.instance
@@ -410,7 +410,7 @@ class Repository {
      String dowUrl = await firebase_storage.FirebaseStorage.instance
          .ref('upload/$fileName')
          .getDownloadURL();
-     Song dataSong = new Song(songUrl: dowUrl, songName: fileName);
+     Song dataSong = new Song(songUrl: dowUrl, songName: nameSong,singerName: nameSinger);
      await uploadSongToChatRoom(dataSong, chatID);
    }catch(e){
 
