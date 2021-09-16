@@ -132,16 +132,22 @@ class _ChatScreenState extends State<ChatScreen> {
       return BlocProvider(
           create: (context) =>
               ChatListBloc(userModel: widget.userModel)..add(ChatListStart()),
-          child: ChatListScreen(
-            userModel: widget.userModel,
+          child: WillPopScope(
+            onWillPop: () async => true,
+            child: ChatListScreen(
+              userModel: widget.userModel,
+            ),
           ));
     } else if (state is ChatScreenStateSearching) {
       return BlocProvider(
         create: (context) => SearchUserBloc()
           ..add(SearchEventButtonPressed(
               displayName:state.name)),
-        child: SearchUserScreen(
-          user: widget.userModel,
+        child: WillPopScope(
+          onWillPop:() async => true,
+          child: SearchUserScreen(
+            user: widget.userModel,
+          ),
         ),
       );
     }

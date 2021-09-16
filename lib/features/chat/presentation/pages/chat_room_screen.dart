@@ -72,7 +72,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               ),
             ),
             actions: <Widget>[
-              isSimpleRoom==false?IconButton(onPressed: (){
+              isSimpleRoom==false && kIsWeb ==false?IconButton(onPressed: (){
                 Routes.instance.navigateTo(RouteNames.videoCall,arguments: widget.chatRoomInfo);
               }, icon: Icon(Icons.videocam)):Container(),
               PopupMenuButton<int>(

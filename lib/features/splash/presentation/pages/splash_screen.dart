@@ -24,9 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     authenticationCubit = inject<AuthenticationCubit>();
     if(kIsWeb){
-      Timer(Duration(seconds: 0), () {
         Routes.instance.navigateTo(RouteNames.login);
-      });    }else{
+      }else{
       Timer(Duration(seconds: 4), () {
         Routes.instance.navigateTo(RouteNames.login);
       });
@@ -46,60 +45,60 @@ class _SplashScreenState extends State<SplashScreen> {
           }
         },
         builder: (context, state) {
-          return Scaffold(
-            body: SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(
-                  'assets/images/splash/background.png',
-                ),
-                      fit: BoxFit.fill
-                    )),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                        height: 70.h,
-                      ),
-                      Container(
-                        height: 90.h,
-                        child: Image.asset('assets/logo/logomain.png'),
-                      ),
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      Expanded(
-                        child: Center(
-                            child: Container(
-                                child:
-                                    Image.asset('assets/images/splash/house.png'))),
-                      ),
-                      Expanded(
-                        child: Container(
-                            child: Text(
-                          'Welcome To Home',
-                          style: TextStyle(
-                              fontSize: 28.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        )),
-                      ),
-                      CircularProgressIndicator(
-                        color: Colors.red,
-                      ),
-                      SizedBox(
-                        height: 50.h,
-                      ),
-                    ],
+            return Scaffold(
+              body: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(
+                    'assets/images/splash/background.png',
+                  ),
+                        fit: BoxFit.fill
+                      )),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          height: 70.h,
+                        ),
+                        Container(
+                          height: 90.h,
+                          child: Image.asset('assets/logo/logomain.png'),
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        Expanded(
+                          child: Center(
+                              child: Container(
+                                  child:
+                                      Image.asset('assets/images/splash/house.png'))),
+                        ),
+                        Expanded(
+                          child: Container(
+                              child: Text(
+                            'Welcome To Home',
+                            style: TextStyle(
+                                fontSize: 28.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          )),
+                        ),
+                        CircularProgressIndicator(
+                          color: Colors.red,
+                        ),
+                        SizedBox(
+                          height: 50.h,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
+            );
         },
       ),
     );

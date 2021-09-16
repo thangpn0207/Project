@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class WaittingApp extends StatefulWidget {
   const WaittingApp({Key? key}) : super(key: key);
 
@@ -21,42 +22,39 @@ class _WaittingAppState extends State<WaittingApp> {
                   image: AssetImage(
                     'assets/images/splash/background.png',
                   ),
-                fit: BoxFit.fill
-              )),
+                  fit: BoxFit.fill)),
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 SizedBox(
-                  height: 90.h,
+                  height: 70.h,
                 ),
-                Expanded(
-                  child: Center(
-                      child: Container(
-                          child:
-                          Image.asset('assets/images/splash/house.png'))),
+                Container(
+                  height: 90.h,
+                  child: Image.asset('assets/logo/logomain.png'),
                 ),
                 SizedBox(
                   height: 30.h,
                 ),
                 Expanded(
-                  child: Container(
-                      child: Text(
-                        'Welcome Back',
-                        style: TextStyle(
-                            fontSize: 28.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      )),
-                ),
-                SizedBox(
-                  height: 20.h,
+                  child: Center(
+                      child: Container(
+                          child:
+                              Image.asset('assets/images/splash/house.png'))),
                 ),
                 Expanded(
                   child: Container(
-                    height: 60.h,
-                    child: Image.asset('assets/logo/logomain.png'),
-                  ),
+                      child: Text(
+                    'Welcome To Home',
+                    style: TextStyle(
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )),
+                ),
+                SizedBox(
+                  height: 50.h,
                 ),
               ],
             ),

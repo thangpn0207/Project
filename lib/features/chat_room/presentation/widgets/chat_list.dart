@@ -33,6 +33,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
+
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (_) {
                         return BlocProvider(

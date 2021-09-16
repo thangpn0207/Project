@@ -1,5 +1,6 @@
 
 
+import 'package:app_web_project/core/model/chat_room.dart';
 import 'package:app_web_project/core/model/user_model.dart';
 import 'package:app_web_project/core/navigator/route_names.dart';
 import 'package:app_web_project/core/utils/logger_utils.dart';
@@ -8,6 +9,7 @@ import 'package:app_web_project/features/chat/presentation/widgets/play_music.da
 import 'package:app_web_project/features/register/presentation/pages/signup_screen.dart';
 import 'package:app_web_project/features/splash/presentation/pages/splash_screen.dart';
 import 'package:app_web_project/features/update_info/presentation/pages/update_info.dart';
+import 'package:app_web_project/features/video_call/presentation/pages/video_call_page.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -75,7 +77,10 @@ class Routes {
       case RouteNames.editInfo:
         final arg = settings.arguments as UserModel;
         return _pageRoute(page: UpdateInfo(userModel: arg), setting: settings);
-      default:
+      case RouteNames.videoCall:
+        final arg = settings.arguments as ChatRoom;
+        return _pageRoute(page: VideoCall(chatRoom: arg,), setting: settings);
+        default:
         return _emptyRoute(settings);
     }
   }
