@@ -7,14 +7,13 @@ import 'package:app_web_project/core/blocs/snack_bar_cubit/snack_bar_cubit.dart'
 import 'package:app_web_project/core/containts/enum_constants.dart';
 import 'package:app_web_project/core/model/chat_message.dart';
 import 'package:app_web_project/core/model/user_model.dart';
-import 'package:app_web_project/features/update_info/presentation/pages/update_info.dart';
-import 'package:app_web_project/services/chat_service.dart';
-import 'package:app_web_project/services/imge_services.dart';
-import 'package:app_web_project/services/repository_service.dart';
-import 'package:app_web_project/services/song_service.dart';
+import 'package:app_web_project/core/services/chat_service.dart';
+import 'package:app_web_project/core/services/imge_services.dart';
+import 'package:app_web_project/core/services/repository_service.dart';
+import 'package:app_web_project/core/services/song_service.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../injection_container.dart';

@@ -1,16 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:app_web_project/core/blocs/authentication_cubit/authentication_cubit.dart';
 import 'package:app_web_project/core/blocs/loading_cubit/loading_cubit.dart';
 import 'package:app_web_project/core/blocs/snack_bar_cubit/snack_bar_cubit.dart';
 import 'package:app_web_project/core/containts/enum_constants.dart';
 import 'package:app_web_project/core/containts/spref_constants.dart';
 import 'package:app_web_project/core/model/image_model.dart';
 import 'package:app_web_project/core/model/user_model.dart';
+import 'package:app_web_project/core/services/repository_service.dart';
 import 'package:app_web_project/core/utils/spref_utils.dart';
-import 'package:app_web_project/services/authentication.dart';
-import 'package:app_web_project/services/repository_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -58,7 +56,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       PickedFile? pickedFile =
           await ImagePicker().getImage(source: ImageSource.gallery);
       if (pickedFile != null) {
-        Uint8List? file =await pickedFile.readAsBytes();
+        Uint8List? file = await pickedFile.readAsBytes();
         loadingCubit.showLoading();
         String? imgSrc = await repository.sendImgToDBWeb(file);
         if (imgSrc != null) {

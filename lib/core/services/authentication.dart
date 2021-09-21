@@ -1,24 +1,26 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:app_web_project/core/model/user_model.dart';
-import 'package:app_web_project/services/repository_service.dart';
+import 'package:app_web_project/core/services/repository_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../injection_container.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
 class Authentication {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final FacebookAuth _facebookAuth;
   final Repository _repository;
   static final _clientIDWeb =
       '52555886797-sd0gdlj8qos7psqquhb4ij0k97b7r641.apps.googleusercontent.com';
-
   Authentication(this._repository,
-      {FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignIn})
+      {FirebaseAuth? firebaseAuth,
+      GoogleSignIn? googleSignIn,
+      FacebookAuth? facebookAuth})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+        _facebookAuth = facebookAuth ?? FacebookAuth.instance,
         _googleSignIn = googleSignIn ??
             GoogleSignIn(scopes: <String>[
               'email',
@@ -37,9 +39,9 @@ class Authentication {
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
 
-    UserCredential result =
+    UserCredential userCredential =
         await _firebaseAuth.signInWithCredential(credential);
-    User? userDetails = result.user;
+    User? userDetails = userCredential.user;
     bool user = await _repository.checkUser(userDetails!.uid);
     if (user == false) {
       UserModel newUser = UserModel(
@@ -53,6 +55,34 @@ class Authentication {
       }
     }
 
+    return userDetails;
+  }
+
+  Future<User> signInWithFacebook() async {
+    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+    print(loginResult.status);
+    // Create a credential from the access token
+    final userData = await FacebookAuth.instance.getUserData();
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    UserCredential userCredential =
+        await _firebaseAuth.signInWithCredential(facebookAuthCredential);
+    // Once signed in, return the UserCredential
+    User? userDetails = userCredential.user;
+    bool user = await _repository.checkUser(userDetails!.uid);
+    if (user == false) {
+      UserModel newUser = UserModel(
+          id: userDetails.uid,
+          email: userData['email'],
+          displayName: userData['name'],
+          imgUrl: userData['picture']['data']['url']);
+      _repository.registerUser(newUser);
+      for (int i = 0; i < 5; i++) {
+        await _repository.updateUserChatList(userDetails.uid, i.toString());
+      }
+    }
     return userDetails;
   }
 
@@ -79,7 +109,7 @@ class Authentication {
 
   Future<UserModel?> getUser() async {
     var firebaseUser = _firebaseAuth.currentUser;
-    var user =  _repository.getUser(firebaseUser!.uid);
+    var user = _repository.getUser(firebaseUser!.uid);
     return user;
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GoogleLoginButton extends StatelessWidget {
@@ -13,28 +12,27 @@ class GoogleLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-        width: 364.w,
         height: 48.h,
+        width: 150.w,
         child: ButtonTheme(
             child: ElevatedButton.icon(
           onPressed: _onPressed,
-          icon: Icon(
-            FontAwesomeIcons.google,
-            color: Colors.white,
-            size: 18.sp,
+          icon: Image.asset(
+            'assets/icons/icon_gg.png',
+            height: 25.h,
+            width: 25.w,
           ),
           label: Text(
-            "SignIn with Google",
-            style: TextStyle(color: Colors.white, fontSize: 18.sp),
+            "Google",
+            style: TextStyle(color: Colors.black26, fontSize: 18.sp),
           ),
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.redAccent),
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    side: BorderSide(color: Colors.redAccent))),
+                    side: BorderSide(color: Colors.white))),
           ),
         )),
       ),

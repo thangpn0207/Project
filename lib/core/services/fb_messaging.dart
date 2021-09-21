@@ -1,25 +1,27 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:app_web_project/core/model/const.dart';
-import 'package:app_web_project/services/repository_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:app_web_project/core/services/repository_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../injection_container.dart';
+import '../../injection_container.dart';
 
 class NotificationController {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   static NotificationController get instance => NotificationController();
-  Repository repository =  inject<Repository>();
+  Repository repository = inject<Repository>();
   Future takeFCMTokenWhenAppLaunch() async {
-    try{
-      NotificationSettings settings = await _firebaseMessaging.requestPermission(
+    try {
+      NotificationSettings settings =
+          await _firebaseMessaging.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -32,7 +34,8 @@ class NotificationController {
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         saveUerTokenToSharedPreference();
         print('User granted permission');
-      } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      } else if (settings.authorizationStatus ==
+          AuthorizationStatus.provisional) {
         saveUerTokenToSharedPreference();
         print('User granted provisional permission');
       } else {
@@ -44,30 +47,30 @@ class NotificationController {
         // Navigator.pushNamed(context, '/message',
         //     arguments: MessageArguments(message, true));
       });
-    }catch(e) {
+    } catch (e) {
       print(e);
     }
   }
 
-  Future<void> saveUerTokenToSharedPreference() async{
+  Future<void> saveUerTokenToSharedPreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _firebaseMessaging.getToken(
-        vapidKey: firebaseCloudvapidKey
-    ).then((val) async {
-      print('Token: '+val!);
+    _firebaseMessaging
+        .getToken(vapidKey: firebaseCloudvapidKey)
+        .then((val) async {
+      print('Token: ' + val!);
       prefs.setString('FCMToken', val);
     });
   }
 
-  Future<void> updateTokenToServer() async{
+  Future<void> updateTokenToServer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _firebaseMessaging.getToken(
-        vapidKey: firebaseCloudvapidKey
-    ).then((val) async {
-      print('Token: '+val!);
+    _firebaseMessaging
+        .getToken(vapidKey: firebaseCloudvapidKey)
+        .then((val) async {
+      print('Token: ' + val!);
       prefs.setString('FCMToken', val);
       String? userID = prefs.getString('userId');
-      if(userID != null) {
+      if (userID != null) {
         FirebaseAuth.instance.authStateChanges().listen((User? user) {
           if (user != null) {
             repository.updateUserToken(userID, val);
@@ -77,11 +80,11 @@ class NotificationController {
     });
   }
 
-  Future initLocalNotification() async{
-    if (Platform.isIOS ) {
+  Future initLocalNotification() async {
+    if (Platform.isIOS) {
       // set iOS Local notification.
       var initializationSettingsAndroid =
-      AndroidInitializationSettings('icon_notification');
+          AndroidInitializationSettings('icon_notification');
       var initializationSettingsIOS = IOSInitializationSettings(
         requestSoundPermission: true,
         requestBadgePermission: true,
@@ -89,27 +92,32 @@ class NotificationController {
         onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
       );
       var initializationSettings = InitializationSettings(
-          android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS);
       await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: _selectNotification);
-    }else {
-      var initializationSettingsAndroid = AndroidInitializationSettings('icon_notification');
+    } else {
+      var initializationSettingsAndroid =
+          AndroidInitializationSettings('icon_notification');
       var initializationSettingsIOS = IOSInitializationSettings(
           onDidReceiveLocalNotification: _onDidReceiveLocalNotification);
       var initializationSettings = InitializationSettings(
-          android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS);
       await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: _selectNotification);
     }
   }
 
-  Future _onDidReceiveLocalNotification(int? id, String? title, String? body, String? payload) async { }
+  Future _onDidReceiveLocalNotification(
+      int? id, String? title, String? body, String? payload) async {}
 
-  Future _selectNotification(String? payload) async { }
+  Future _selectNotification(String? payload) async {}
 
-  Future<void> sendNotificationMessageToPeerUser(unReadMSGCount,messageType,textFromTextField,myName,chatID,peerUserToken,myImageUrl) async {
+  Future<void> sendNotificationMessageToPeerUser(unReadMSGCount, messageType,
+      textFromTextField, myName, chatID, peerUserToken, myImageUrl) async {
     // FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-    try{
+    try {
       await http.post(
         // 'https://fcm.googleapis.com/fcm/send',
         // 'https://api.rnfirebase.io/messaging/send',
@@ -123,9 +131,9 @@ class NotificationController {
             'notification': <String, dynamic>{
               'body': messageType == 'text' ? '$textFromTextField' : '(Photo)',
               'title': '$myName',
-              'badge':'$unReadMSGCount',//'$unReadMSGCount'
-              "sound" : "default",
-              "image" : myImageUrl
+              'badge': '$unReadMSGCount', //'$unReadMSGCount'
+              "sound": "default",
+              "image": myImageUrl
             },
             // 'priority': 'high',
             'data': <String, dynamic>{
@@ -133,9 +141,10 @@ class NotificationController {
               'id': '1',
               'status': 'done',
               'chatroomid': chatID,
-              'userImage':myImageUrl,
-              'userName':'$myName',
-              'message': messageType == 'text' ? '$textFromTextField' : '(Photo)',
+              'userImage': myImageUrl,
+              'userName': '$myName',
+              'message':
+                  messageType == 'text' ? '$textFromTextField' : '(Photo)',
             },
             'to': peerUserToken,
           },

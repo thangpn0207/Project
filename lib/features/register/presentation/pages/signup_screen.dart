@@ -40,9 +40,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: BlocListener<SignUpCubit, SignUpState>(
         listener: (context, state) {
           if (state.isSuccess) {
-            showDialogApp(context, DiaLogUpdateSuccess(onPress: (){
-              authenticationCubit.authenticationCheck();
-            }, title: "You have successfully registered, thank you"));
+            showDialogApp(
+                context,
+                DiaLogUpdateSuccess(
+                    onPress: () {
+                      authenticationCubit.authenticationCheck();
+                    },
+                    title: "You have successfully registered, thank you"));
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Row(
@@ -61,6 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Scaffold(
           body: SingleChildScrollView(
             child: Container(
+              height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
                   image: DecorationImage(
                       fit: BoxFit.cover,
@@ -91,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Container(
                     margin: EdgeInsets.only(left: 15.w, bottom: 10.h),
                     child: Text(
-                      'Enter your email and password',
+                      'Enter your information to signup',
                       style: TextStyle(fontSize: 16.sp),
                     ),
                   ),
@@ -111,39 +116,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     margin: EdgeInsets.only(top: 25.h, left: 15.w, right: 15.w),
                     child: Row(
                       children: [
-                        Text('By continuing you agree  to our ',
-                            style: TextStyle(fontSize: 14.sp)),
+                        Text('Our ', style: TextStyle(fontSize: 16.sp)),
+                        Container(
+                          child: InkWell(
+                            onTap: () {},
+                            child: Text(
+                              'Privacy Policy',
+                              style: TextStyle(
+                                  color: Colors.orangeAccent, fontSize: 16.sp),
+                            ),
+                          ),
+                        ),
+                        Text(' and ', style: TextStyle(fontSize: 16.sp)),
                         Container(
                           child: InkWell(
                             onTap: () {},
                             child: Text(
                               'Terms of Service',
                               style: TextStyle(
-                                  color: Colors.orangeAccent, fontSize: 14.sp),
+                                  color: Colors.orangeAccent, fontSize: 16.sp),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 15.w, right: 15.w),
-                    child: Row(
-                      children: [
-                        Text(
-                          'and ',
-                          style: TextStyle(fontSize: 14.sp),
-                        ),
-                        Container(
-                          child: InkWell(
-                              onTap: () {},
-                              child: Text(
-                                'Privacy Policy',
-                                style: TextStyle(
-                                    color: Colors.orangeAccent,
-                                    fontSize: 14.sp),
-                              )),
-                        )
                       ],
                     ),
                   ),
@@ -151,7 +145,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 15.h,
                   ),
                   SignUpButton(onPressed: () {
-                    OnSignINButton(_usernameController.text.trim(), _passwordController.text.trim(), _confirmPasswordController.text.trim(), _displayName.text.trim());
+                    OnSignINButton(
+                        _usernameController.text.trim(),
+                        _passwordController.text.trim(),
+                        _confirmPasswordController.text.trim(),
+                        _displayName.text.trim());
                   }),
                   Container(
                     child: Row(
@@ -168,7 +166,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                             child: Text(
                               'Login',
-                              style: TextStyle(color: Colors.redAccent),
+                              style: TextStyle(
+                                  color: Colors.redAccent, fontSize: 16.sp),
                             ))
                       ],
                     ),
@@ -181,7 +180,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
-  void OnSignINButton(String userName,String password,String confirmPassword,String displayName){
+
+  void OnSignINButton(String userName, String password, String confirmPassword,
+      String displayName) {
     signUpCubit.registerUser(userName, password, confirmPassword, displayName);
   }
 }

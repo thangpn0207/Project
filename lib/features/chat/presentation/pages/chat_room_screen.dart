@@ -21,8 +21,9 @@ import 'package:app_web_project/features/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/list_songs.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../widgets/list_songs.dart';
 
 class ChatRoomScreen extends StatefulWidget {
   final UserModel userModel;
@@ -51,8 +52,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
   @override
   Widget build(BuildContext context) {
-    isSimpleRoom =   listRoomDefault.contains(int.parse(widget.chatRoomInfo.id??'') );
-    print(isSimpleRoom);
+    bool isNumber = _isNumeric(widget.chatRoomInfo.id);
+    if (isNumber == true) {
+      isSimpleRoom =
+          listRoomDefault.contains(int.parse(widget.chatRoomInfo.id ?? ''));
+    } else {
+      isSimpleRoom = false;
+    }
     return BlocProvider<ChatRoomBloc>(
       create: (context) => chatRoomBloc,
       child: Scaffold(
@@ -72,9 +78,14 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               ),
             ),
             actions: <Widget>[
-              isSimpleRoom==false && kIsWeb ==false?IconButton(onPressed: (){
-                Routes.instance.navigateTo(RouteNames.videoCall,arguments: widget.chatRoomInfo);
-              }, icon: Icon(Icons.videocam)):Container(),
+              isSimpleRoom == false && kIsWeb == false
+                  ? IconButton(
+                      onPressed: () {
+                        Routes.instance.navigateTo(RouteNames.videoCall,
+                            arguments: widget.chatRoomInfo);
+                      },
+                      icon: Icon(Icons.videocam))
+                  : Container(),
               PopupMenuButton<int>(
                 color: Color(0xfffcf3f4),
                 shape: RoundedRectangleBorder(
@@ -104,16 +115,14 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     ),
                   ),
                   PopupMenuItem(
-                          value: 3,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Song from Url'),
-                              Icon(Icons.link,
-                                  color: Colors.black),
-                            ],
-                          ))
-
+                      value: 3,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Song from Url'),
+                          Icon(Icons.link, color: Colors.black),
+                        ],
+                      ))
                 ],
                 onCanceled: () {},
                 onSelected: (value) {
@@ -130,7 +139,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     });
                   } else if (value == 2) {
                     chatRoomBloc.add(UploadSong());
-                  } else if(value == 3){
+                  } else if (value == 3) {
                     chatRoomBloc.add(ImportSongURl());
                   }
                 },
@@ -147,7 +156,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               if (state.selectSuccess == true) {
                 return showBottomSheetApp(context,
                     child: UploadSongInfo(chatRoomBloc: chatRoomBloc));
-              }else if(state.setSongUrl ==true){
+              } else if (state.setSongUrl == true) {
                 return showBottomSheetApp(context,
                     child: ImportSongUrl(chatRoomBloc: chatRoomBloc));
               }
@@ -320,6 +329,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   //     ),
   //   );
   // }
+  bool _isNumeric(String? str) {
+    if (str == null) {
+      return false;
+    }
+    return int.tryParse(str) != null;
+  }
 
   @override
   void dispose() {

@@ -1,11 +1,12 @@
 import 'package:app_web_project/core/blocs/authentication_cubit/authentication_cubit.dart';
-import 'package:app_web_project/core/components/google_button.dart';
 import 'package:app_web_project/core/components/logging_button.dart';
 import 'package:app_web_project/core/components/text_field_nomal.dart';
 import 'package:app_web_project/core/components/text_field_password.dart';
 import 'package:app_web_project/core/navigator/route_names.dart';
+import 'package:app_web_project/core/widgets/divider_custom.dart';
 import 'package:app_web_project/features/login/presentation/blocs/login_cubit/login_cubit.dart';
-import 'package:app_web_project/features/register/presentation/pages/signup_screen.dart';
+import 'package:app_web_project/features/login/presentation/widgets/facebook_button.dart';
+import 'package:app_web_project/features/login/presentation/widgets/google_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,25 +35,28 @@ class _LoginScreenState extends State<LoginScreen> {
     loginCubit = inject<LoginCubit>();
     super.initState();
   }
+
   Future<bool> _onWillPop() async {
     return (await showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit an App'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('No'),
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              TextButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: new Text('Yes'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => SystemNavigator.pop(),
-            child: new Text('Yes'),
-          ),
-        ],
-      ),
-    )) ?? false;
+        )) ??
+        false;
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LoginCubit>(
@@ -103,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Image.asset('assets/logo/logomain.png')),
                         ),
                         SizedBox(
-                          height: 70.h,
+                          height: 50.h,
                         ),
                         Container(
                           margin: EdgeInsets.symmetric(
@@ -115,11 +119,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(
-                               left: 15.w, bottom: 30.h),
+                          margin: EdgeInsets.only(left: 15.w, bottom: 30.h),
                           child: Text(
                             'Enter your email and password',
-                            style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: 16.sp, fontWeight: FontWeight.w500),
                           ),
                         ),
                         TextFieldNormal(
@@ -128,9 +132,30 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFieldPassword(
                             labelText: 'Password',
                             textEditingController: _passwordController),
-                        SizedBox(height: 30.h,),
                         LoggingButton(onPressed: _onFormSubmitted),
-                        GoogleLoginButton(onPressed: _onGooglePressed),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        DividerCustom(),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GoogleLoginButton(onPressed: _onGooglePressed),
+                              SizedBox(
+                                width: 20.w,
+                              ),
+                              FacebookLoginButton(
+                                  onPressed: _onFacebookPressed),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
                         Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -142,11 +167,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               TextButton(
                                   onPressed: () {
-                                    Routes.instance.navigateTo(RouteNames.signUp);
+                                    Routes.instance
+                                        .navigateTo(RouteNames.signUp);
                                   },
                                   child: Text(
                                     'Sign up',
-                                    style: TextStyle(color: Colors.redAccent),
+                                    style: TextStyle(
+                                        color: Colors.redAccent,
+                                        fontSize: 16.sp),
                                   ))
                             ],
                           ),
@@ -181,5 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
     loginCubit.loginWithGG();
   }
 
-
+  void _onFacebookPressed() {
+    loginCubit.loginWithFacebook();
+  }
 }

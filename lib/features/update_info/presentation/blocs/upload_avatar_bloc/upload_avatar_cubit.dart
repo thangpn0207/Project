@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:app_web_project/core/blocs/loading_cubit/loading_cubit.dart';
 import 'package:app_web_project/core/blocs/snack_bar_cubit/snack_bar_cubit.dart';
 import 'package:app_web_project/core/containts/enum_constants.dart';
-import 'package:app_web_project/services/repository_service.dart';
+import 'package:app_web_project/core/services/repository_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,8 +13,8 @@ import 'package:meta/meta.dart';
 part 'upload_avatar_state.dart';
 
 class UploadAvatarCubit extends Cubit<UploadAvatarState> {
-   LoadingCubit loadingCubit;
-   Repository repository;
+  LoadingCubit loadingCubit;
+  Repository repository;
   SnackBarCubit snackBarCubit;
 
   UploadAvatarCubit(this.loadingCubit, this.repository, this.snackBarCubit)
@@ -29,7 +29,7 @@ class UploadAvatarCubit extends Cubit<UploadAvatarState> {
       PickedFile? pickedFile =
           await ImagePicker().getImage(source: ImageSource.gallery);
       if (pickedFile != null) {
-        Uint8List? file =await pickedFile.readAsBytes();
+        Uint8List? file = await pickedFile.readAsBytes();
         loadingCubit.showLoading();
         String? imgSrc = await repository.sendImgToDBWeb(file);
         if (imgSrc != null) {
@@ -70,7 +70,7 @@ class UploadAvatarCubit extends Cubit<UploadAvatarState> {
         case PickImageType.gallery:
           PickedFile? pickedFile =
               await ImagePicker().getImage(source: ImageSource.gallery);
-          if (pickedFile != null ) {
+          if (pickedFile != null) {
             final File imageFile = File(pickedFile.path);
             loadingCubit.showLoading();
             String? imgSrc = await repository.sendImgToDB(imageFile);
