@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:app_web_project/core/model/chat_message.dart';
@@ -28,6 +29,7 @@ class ChatService {
         lastMessageBy: '',
         lastMessage: '',
         lastMessageTs: DateTime.now().millisecondsSinceEpoch.toString(),
+        lastMessageType: '',
       );
       await _repository.setChatRoom(newRoomInfo);
       await _repository.updateUserChatList(user.id, chatRoomId);
@@ -56,6 +58,7 @@ class ChatService {
         lastMessageBy: doc['lastMessageBy'],
         lastMessageTs: doc['lastMessageTs'],
         lastMessage: doc['lastMessage'],
+        lastMessageType: doc['lastMessageType'],
       ));
     });
     sink.add(result);
@@ -74,11 +77,20 @@ class ChatService {
           handleData: (DocumentSnapshot<Map<String, dynamic>> snapShot,
               EventSink<List<String>> sink) {
     if (snapShot.exists) {
-      sink.add(snapShot.data()!.keys.toList());
+      List<String> result = <String>[];
+      snapShot.data()!.keys.forEach((element) {
+        if (snapShot.data()![element] == true) {
+          result.add(element);
+        }
+      });
+      sink.add(result);
     } else {
       sink.add([]);
     }
   });
+  Future<void> deleteChatRoom(String? userId, String chatRoomId) async {
+    return await _repository.deleteChatRoom(userId, chatRoomId);
+  }
 
   Stream<List<ChatMessage>> getChatMessages(String chatRoomId) {
     return _repository
@@ -96,12 +108,13 @@ class ChatService {
     snapShot.docs.forEach((doc) {
       result.add(ChatMessage(
           type: doc['type'],
-          message: doc['message'],
+          message: utf8.decode(base64.decode(doc['message'])),
           sendBy: doc['sendBy'],
           lastMessageTs: doc['lastMessageTs']));
     });
     sink.add(result);
   });
+
   Future<Map<String, dynamic>?> sendChatMessage(
       String chatRoomId, ChatMessage chatMessage) async {
     return await _repository.sendChatMessage(chatRoomId, chatMessage);

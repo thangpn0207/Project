@@ -64,7 +64,8 @@ class SearchUserBloc extends Bloc<SearchEvent, SearchUserState> {
         id: documentSnapshot.data()!['id'],
         title: documentSnapshot.data()!['title'],
         imgUrl: documentSnapshot.data()!['imgUrl'],
-        lastMessageBy: documentSnapshot.data()!['lastMessageBy']);
+        lastMessageBy: documentSnapshot.data()!['lastMessageBy'],
+        lastMessageType: documentSnapshot.data()!['lastMessageType']);
     add(EventGotoChatRoom(user, chatRoomInfo));
   }
 

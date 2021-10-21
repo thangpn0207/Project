@@ -20,7 +20,7 @@ class DialogLogOut extends StatelessWidget {
           Expanded(
             child: Container(
               child: Text(
-                'Ara you sure?',
+                'Are you sure?',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 20.sp,

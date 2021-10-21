@@ -95,91 +95,106 @@ class _LoginScreenState extends State<LoginScreen> {
                           image: AssetImage(
                               'assets/images/login/Background.png'))),
                   child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 80.h,
-                        ),
-                        Container(
-                          height: 100.h,
-                          child: Center(
-                              child: Image.asset('assets/logo/logomain.png')),
-                        ),
-                        SizedBox(
-                          height: 50.h,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 15.w, vertical: 15.h),
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.sp),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 80.h,
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 15.w, bottom: 30.h),
-                          child: Text(
-                            'Enter your email and password',
-                            style: TextStyle(
-                                fontSize: 16.sp, fontWeight: FontWeight.w500),
+                          Container(
+                            height: 100.h,
+                            child: Center(
+                                child: Image.asset('assets/logo/logomain.png')),
                           ),
-                        ),
-                        TextFieldNormal(
-                            labelText: 'Email',
-                            textEditingController: _emailController),
-                        TextFieldPassword(
-                            labelText: 'Password',
-                            textEditingController: _passwordController),
-                        LoggingButton(onPressed: _onFormSubmitted),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        DividerCustom(),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GoogleLoginButton(onPressed: _onGooglePressed),
-                              SizedBox(
-                                width: 20.w,
-                              ),
-                              FacebookLoginButton(
-                                  onPressed: _onFacebookPressed),
-                            ],
+                          SizedBox(
+                            height: 50.h,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Don\' have an account ? ',
-                                style: TextStyle(
-                                    fontSize: 18.sp, color: Colors.black),
-                              ),
-                              TextButton(
-                                  onPressed: () {
-                                    Routes.instance
-                                        .navigateTo(RouteNames.signUp);
-                                  },
-                                  child: Text(
-                                    'Sign up',
-                                    style: TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 16.sp),
-                                  ))
-                            ],
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 15.h),
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20.sp),
+                            ),
                           ),
-                        )
-                      ],
+                          Container(
+                            margin: EdgeInsets.only(bottom: 30.h),
+                            child: Text(
+                              'Enter your email and password',
+                              style: TextStyle(
+                                  fontSize: 16.sp, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          TextFieldNormal(
+                              labelText: 'Email',
+                              textEditingController: _emailController),
+                          TextFieldPassword(
+                              labelText: 'Password',
+                              textEditingController: _passwordController),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                                onPressed: () {
+                                  Routes.instance
+                                      .navigateTo(RouteNames.forgotPassWord);
+                                },
+                                child: Text(
+                                  'Forgot password',
+                                  style: TextStyle(
+                                      color: Colors.redAccent, fontSize: 16.sp),
+                                )),
+                          ),
+                          LoggingButton(onPressed: _onFormSubmitted),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          DividerCustom(),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GoogleLoginButton(onPressed: _onGooglePressed),
+                                SizedBox(
+                                  width: 20.w,
+                                ),
+                                FacebookLoginButton(
+                                    onPressed: _onFacebookPressed),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Don\' have an account ? ',
+                                  style: TextStyle(
+                                      fontSize: 18.sp, color: Colors.black),
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      Routes.instance
+                                          .navigateTo(RouteNames.signUp);
+                                    },
+                                    child: Text(
+                                      'Sign up',
+                                      style: TextStyle(
+                                          color: Colors.redAccent,
+                                          fontSize: 16.sp),
+                                    ))
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );

@@ -10,8 +10,8 @@ import 'chat_list_event.dart';
 import 'chat_list_state.dart';
 
 class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
-  final UserModel userModel;
-  ChatListBloc({required this.userModel}) : super(ChatListInitial());
+  late UserModel userModel;
+  ChatListBloc() : super(ChatListInitial());
   ChatService _chatService = inject<ChatService>();
   StreamSubscription? chatList;
   StreamSubscription? chatRoomInfoList;
@@ -20,6 +20,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   Stream<ChatListState> mapEventToState(ChatListEvent event) async* {
     // TODO: implement mapEventToState
     if (event is ChatListStart) {
+      userModel = event.userModel;
       yield ChatListLoading();
       chatList?.cancel();
       chatList = _chatService.getChatList(userModel.id).listen((list) {
@@ -34,6 +35,8 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       });
     } else if (event is ChatListLoaded) {
       yield* _mapChatListLoadToState(event.chatList);
+    } else if (event is DeleteChatRoomEvent) {
+      _chatService.deleteChatRoom(userModel.id, event.chatRoomId);
     }
   }
 

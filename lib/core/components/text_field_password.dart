@@ -18,7 +18,7 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
   Widget build(BuildContext context) {
     return Container(
       height: 65.h,
-      margin: EdgeInsets.only(top: 10.h, left: 15.w, right: 15.w),
+      margin: EdgeInsets.only(top: 10.h),
       child: TextFormField(
         controller: widget.textEditingController,
         style: TextStyle(fontSize: 16.sp),
@@ -31,7 +31,10 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
               borderSide: BorderSide(color: Colors.black45),
             ),
             labelText: widget.labelText,
-            labelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp,color: Colors.grey),
+            labelStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
+                color: Colors.grey),
             suffixIcon: Padding(
               padding: EdgeInsets.only(),
               child: IconButton(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -49,7 +50,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     } else if (event is SendMessage) {
       ChatMessage message = ChatMessage(
         lastMessageTs: DateTime.now().millisecondsSinceEpoch.toString(),
-        message: event.message,
+        message: base64.encode(utf8.encode(event.message)),
         sendBy: user.id ?? '',
         type: 'text',
       );

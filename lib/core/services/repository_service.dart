@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:app_web_project/core/containts/spref_constants.dart';
 import 'package:app_web_project/core/model/chat_message.dart';
 import 'package:app_web_project/core/model/chat_room.dart';
@@ -6,37 +7,36 @@ import 'package:app_web_project/core/model/image_model.dart';
 import 'package:app_web_project/core/model/song.dart';
 import 'package:app_web_project/core/model/user_model.dart';
 import 'package:app_web_project/core/utils/spref_utils.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart' as firebase_core;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class Repository {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
 //user
   Future<UserModel?> searchUserByEmail(String email) async {
-    QuerySnapshot<Map<String,dynamic>> snapShot=  await _firebaseFirestore
+    QuerySnapshot<Map<String, dynamic>> snapShot = await _firebaseFirestore
         .collection('users')
         .where('email', isEqualTo: email.toLowerCase())
         .get();
     var userId = await SPrefUtil.instance.getString(SPrefConstants.userId);
-     final data= snapShot.docs[0];
-     if(data['id']!=userId){
-       UserModel userModel = UserModel(
-         id: data['id'],
-         email: data['email'],
-         displayName: data['displayName'],
-         imgUrl: data['imgUrl'],
-         location: data['location']!=null?data['location']:'',
-         phone: data['phone']!=null?data['phone']:'',
-         age: data['age']!=null?data['age']:'',
-         photos: data['photo']!=null?data['photo']:'',
-       );
-       return userModel;
-     }else{
-       return null;
-     }
-
+    final data = snapShot.docs[0];
+    if (data['id'] != userId) {
+      UserModel userModel = UserModel(
+        id: data['id'],
+        email: data['email'],
+        displayName: data['displayName'],
+        imgUrl: data['imgUrl'],
+        location: data['location'] != null ? data['location'] : '',
+        phone: data['phone'] != null ? data['phone'] : '',
+        age: data['age'] != null ? data['age'] : '',
+        photos: data['photo'] != null ? data['photo'] : '',
+      );
+      return userModel;
+    } else {
+      return null;
+    }
   }
 
   Stream<QuerySnapshot> searchUserByName(String email) {
@@ -66,12 +66,12 @@ class Repository {
           email: doc['email'],
           displayName: doc['displayName'],
           imgUrl: doc['imgUrl'],
-          location: doc['location']!=null?doc['location']:'',
-          phone: doc['phone']!=null?doc['phone']:'',
-          age: doc['age']!=null?doc['age']:'',
-          photos: doc['photo']!=null?doc['photo']:'',
+          location: doc['location'] != null ? doc['location'] : '',
+          phone: doc['phone'] != null ? doc['phone'] : '',
+          age: doc['age'] != null ? doc['age'] : '',
+          photos: doc['photo'] != null ? doc['photo'] : '',
         ));
-      }else{
+      } else {
         print('object');
       }
     });
@@ -83,64 +83,58 @@ class Repository {
         .collection('users')
         .doc(userId)
         .collection('photos')
-       // .orderBy('imageTs', descending: false)
+        // .orderBy('imageTs', descending: false)
         .snapshots();
   }
-  Stream<List<ImageModel>> getListPhotos(String userId) {
-    return getPhotoUser(userId)
-        .transform(documentToImageTransformer);
-  }
-  StreamTransformer<QuerySnapshot<Map<String, dynamic>>, List<ImageModel>>
-  documentToImageTransformer = StreamTransformer<
-      QuerySnapshot<Map<String, dynamic>>,
-      List<ImageModel>>.fromHandlers(
-      handleData: (QuerySnapshot<Map<String, dynamic>> snapShot,
-          EventSink<List<ImageModel>> sink) async {
-        List<ImageModel> result = <ImageModel>[];
-        snapShot.docs.forEach((doc) {
-          ImageModel image = ImageModel(
-              imageTs: doc['imageTs'],
-              imageUrl: doc['imgUrl']);
-          result.add(image);
-          print(image);
-        });
-        sink.add(result);
-      });
 
+  Stream<List<ImageModel>> getListPhotos(String userId) {
+    return getPhotoUser(userId).transform(documentToImageTransformer);
+  }
+
+  StreamTransformer<QuerySnapshot<Map<String, dynamic>>, List<ImageModel>>
+      documentToImageTransformer = StreamTransformer<
+              QuerySnapshot<Map<String, dynamic>>,
+              List<ImageModel>>.fromHandlers(
+          handleData: (QuerySnapshot<Map<String, dynamic>> snapShot,
+              EventSink<List<ImageModel>> sink) async {
+    List<ImageModel> result = <ImageModel>[];
+    snapShot.docs.forEach((doc) {
+      ImageModel image =
+          ImageModel(imageTs: doc['imageTs'], imageUrl: doc['imgUrl']);
+      result.add(image);
+    });
+    sink.add(result);
+  });
 
   Future<void> sendPhotoToDb(
-      String userId, ImageModel imageModel,int photoNumber) async {
-  try{
-    var reference =  _firebaseFirestore
-        .collection('users')
-        .doc(userId)
-        .collection('photos')
-        .doc(imageModel.imageTs);
-    await _firebaseFirestore.runTransaction((transaction) async {
-      transaction.set(reference, {
-        'imageTs': imageModel.imageTs,
-        'imgUrl': imageModel.imageUrl,
+      String userId, ImageModel imageModel, int photoNumber) async {
+    try {
+      var reference = _firebaseFirestore
+          .collection('users')
+          .doc(userId)
+          .collection('photos')
+          .doc(imageModel.imageTs);
+      await _firebaseFirestore.runTransaction((transaction) async {
+        transaction.set(reference, {
+          'imageTs': imageModel.imageTs,
+          'imgUrl': imageModel.imageUrl,
+        });
       });
-    });
-    int photos= photoNumber +1;
-    await _firebaseFirestore
-        .collection('users')
-        .doc(userId)
-        .update({
-      'photo': photos,
-    });
-
-  }catch(e){
-    print(e.toString());
+      int photos = photoNumber + 1;
+      await _firebaseFirestore.collection('users').doc(userId).update({
+        'photo': photos,
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
-
-  }
   Future<void> updateUserToken(userID, token) async {
     await FirebaseFirestore.instance.collection('users').doc(userID).update({
       'FCMToken': token,
     });
   }
+
   Future<UserModel?> getUser(String? id) async {
     var doc = await _firebaseFirestore.collection('users').doc(id).get();
     final data = doc.data();
@@ -150,10 +144,10 @@ class Repository {
         email: data['email'],
         displayName: data['displayName'],
         imgUrl: data['imgUrl'],
-        location: data['location']!=null?data['location']:'',
-        phone: data['phone']!=null?data['phone']:'',
-        age: data['age']!=null?data['age']:'',
-        photos: data['photo']!=null?data['photo']:0,
+        location: data['location'] != null ? data['location'] : '',
+        phone: data['phone'] != null ? data['phone'] : '',
+        age: data['age'] != null ? data['age'] : '',
+        photos: data['photo'] != null ? data['photo'] : 0,
       );
     } else {
       return null;
@@ -175,10 +169,10 @@ class Repository {
       'email': user.email,
       'displayName': user.displayName,
       'imgUrl': user.imgUrl,
-      'location':'',
-      'phone':'',
-      'age':'',
-      'photo':0,
+      'location': '',
+      'phone': '',
+      'age': '',
+      'photo': 0,
     });
   }
 
@@ -196,9 +190,9 @@ class Repository {
       'imgUrl': userModel.imgUrl,
       "email": userModel.email,
       "displayName": userModel.displayName,
-      'location':userModel.location,
-      'phone':userModel.phone,
-      'age':userModel.age,
+      'location': userModel.location,
+      'phone': userModel.phone,
+      'age': userModel.age,
     });
   }
 
@@ -222,6 +216,12 @@ class Repository {
     } else {
       return chatListDoc.reference.set({chatRoomId: true});
     }
+  }
+
+  Future<void> deleteChatRoom(String? userId, String chatRoomId) async {
+    var chatListDoc =
+        await _firebaseFirestore.collection('userAndChats').doc(userId).get();
+    return chatListDoc.reference.update({chatRoomId: false});
   }
 
   Stream<DocumentSnapshot> getChatList(String id) {
@@ -289,6 +289,7 @@ class Repository {
             chatMessage.type == 'text' ? chatMessage.message : 'Photo',
         'lastMessageTs': chatMessage.lastMessageTs,
         'lastMessageBy': chatMessage.sendBy,
+        'lastMessageType': chatMessage.type,
       });
     });
   }
@@ -334,6 +335,7 @@ class Repository {
       return null;
     }
   }
+
   Future<String?> sendImageToUserInChatRoomWeb(croppedFile, chatID) async {
     try {
       String imageTimeStamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -355,6 +357,7 @@ class Repository {
       return null;
     }
   }
+
   Future<String?> sendImgToDB(croppedFile) async {
     try {
       String imageTimeStamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -376,6 +379,7 @@ class Repository {
       return null;
     }
   }
+
   Future<String?> sendImgToDBWeb(croppedFile) async {
     try {
       String imageTimeStamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -397,25 +401,24 @@ class Repository {
       return null;
     }
   }
-  Future<void> uploadFileSong(file, String chatID,String fileName,String nameSong,String nameSinger) async {
-   try{
-     try {
-       await firebase_storage.FirebaseStorage.instance
-           .ref('upload/$fileName')
-           .putData(file);
-     } on firebase_core.FirebaseException catch (e) {
-       print('upload image exception, code is ${e.code}');
-       // e.g, e.code == 'canceled'
-     }
-     String dowUrl = await firebase_storage.FirebaseStorage.instance
-         .ref('upload/$fileName')
-         .getDownloadURL();
-     Song dataSong = new Song(songUrl: dowUrl, songName: nameSong,singerName: nameSinger);
-     await uploadSongToChatRoom(dataSong, chatID);
-   }catch(e){
 
-   }
-
+  Future<void> uploadFileSong(file, String chatID, String fileName,
+      String nameSong, String nameSinger) async {
+    try {
+      try {
+        await firebase_storage.FirebaseStorage.instance
+            .ref('upload/$fileName')
+            .putData(file);
+      } on firebase_core.FirebaseException catch (e) {
+        print('upload image exception, code is ${e.code}');
+        // e.g, e.code == 'canceled'
+      }
+      String dowUrl = await firebase_storage.FirebaseStorage.instance
+          .ref('upload/$fileName')
+          .getDownloadURL();
+      Song dataSong =
+          new Song(songUrl: dowUrl, songName: nameSong, singerName: nameSinger);
+      await uploadSongToChatRoom(dataSong, chatID);
+    } catch (e) {}
   }
-
 }

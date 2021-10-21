@@ -70,109 +70,113 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   image: DecorationImage(
                       fit: BoxFit.cover,
                       image: AssetImage('assets/images/login/Background.png'))),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 30.h,
-                  ),
-                  Container(
-                    height: 100.h,
-                    child:
-                        Center(child: Image.asset('assets/logo/logomain.png')),
-                  ),
-                  SizedBox(
-                    height: 30.h,
-                  ),
-                  Container(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
-                    child: Text(
-                      'SignUp',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18.sp),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 30.h,
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 15.w, bottom: 10.h),
-                    child: Text(
-                      'Enter your information to signup',
-                      style: TextStyle(fontSize: 16.sp),
+                    Container(
+                      height: 100.h,
+                      child: Center(
+                          child: Image.asset('assets/logo/logomain.png')),
                     ),
-                  ),
-                  TextFieldNormal(
-                      labelText: "UserName",
-                      textEditingController: _usernameController),
-                  TextFieldPassword(
-                      labelText: "Password",
-                      textEditingController: _passwordController),
-                  TextFieldPassword(
-                      labelText: "Confirm Password",
-                      textEditingController: _confirmPasswordController),
-                  TextFieldNormal(
-                      labelText: "Display Name",
-                      textEditingController: _displayName),
-                  Container(
-                    margin: EdgeInsets.only(top: 25.h, left: 15.w, right: 15.w),
-                    child: Row(
-                      children: [
-                        Text('Our ', style: TextStyle(fontSize: 16.sp)),
-                        Container(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Text(
-                              'Privacy Policy',
-                              style: TextStyle(
-                                  color: Colors.orangeAccent, fontSize: 16.sp),
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 15.h),
+                      child: Text(
+                        'SignUp',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18.sp),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      child: Text(
+                        'Enter your information to signup',
+                        style: TextStyle(fontSize: 16.sp),
+                      ),
+                    ),
+                    TextFieldNormal(
+                        labelText: "UserName",
+                        textEditingController: _usernameController),
+                    TextFieldPassword(
+                        labelText: "Password",
+                        textEditingController: _passwordController),
+                    TextFieldPassword(
+                        labelText: "Confirm Password",
+                        textEditingController: _confirmPasswordController),
+                    TextFieldNormal(
+                        labelText: "Display Name",
+                        textEditingController: _displayName),
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 10.h),
+                        child: Row(
+                          children: [
+                            Text('Our ', style: TextStyle(fontSize: 16.sp)),
+                            Container(
+                              child: InkWell(
+                                onTap: () {},
+                                child: Text(
+                                  'Privacy Policy',
+                                  style: TextStyle(
+                                      color: Colors.orangeAccent,
+                                      fontSize: 16.sp),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        Text(' and ', style: TextStyle(fontSize: 16.sp)),
-                        Container(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Text(
-                              'Terms of Service',
-                              style: TextStyle(
-                                  color: Colors.orangeAccent, fontSize: 16.sp),
+                            Text(' and ', style: TextStyle(fontSize: 16.sp)),
+                            Container(
+                              child: InkWell(
+                                onTap: () {},
+                                child: Text(
+                                  'Terms of Service',
+                                  style: TextStyle(
+                                      color: Colors.orangeAccent,
+                                      fontSize: 16.sp),
+                                ),
+                              ),
                             ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SignUpButton(onPressed: () {
+                      OnSignINButton(
+                          _usernameController.text.trim(),
+                          _passwordController.text.trim(),
+                          _confirmPasswordController.text.trim(),
+                          _displayName.text.trim());
+                    }),
+                    Container(
+                      margin: EdgeInsets.only(top: 10.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Already have an account ? ',
+                            style:
+                                TextStyle(fontSize: 18.sp, color: Colors.black),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15.h,
-                  ),
-                  SignUpButton(onPressed: () {
-                    OnSignINButton(
-                        _usernameController.text.trim(),
-                        _passwordController.text.trim(),
-                        _confirmPasswordController.text.trim(),
-                        _displayName.text.trim());
-                  }),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Already have an account ? ',
-                          style:
-                              TextStyle(fontSize: 18.sp, color: Colors.black),
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                  color: Colors.redAccent, fontSize: 16.sp),
-                            ))
-                      ],
-                    ),
-                  )
-                ],
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                    color: Colors.redAccent, fontSize: 16.sp),
+                              ))
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

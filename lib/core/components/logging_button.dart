@@ -12,9 +12,9 @@ class LoggingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-        width: 364.w,
+        margin: EdgeInsets.only(top: 10.h),
         height: 48.h,
+        width: 320.w,
         child: ButtonTheme(
             child: ElevatedButton.icon(
           onPressed: _onPressed,

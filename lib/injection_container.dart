@@ -2,6 +2,8 @@ import 'package:app_web_project/core/services/authentication.dart';
 import 'package:app_web_project/features/change_password/presentation/blocs/change_password_cubit.dart';
 import 'package:app_web_project/features/chat/presentation/blocs/audio_cubit/audio_cubit.dart';
 import 'package:app_web_project/features/chat/presentation/blocs/audio_web_cubit/audio_web_cubit.dart';
+import 'package:app_web_project/features/chat_room/presentation/blocs/chat_list_bloc/chat_list_bloc.dart';
+import 'package:app_web_project/features/forgor_password/presentation/blocs/forgot_cubit/forgot_cubit.dart';
 import 'package:app_web_project/features/main/presentation/blocs/home_cubit.dart';
 import 'package:app_web_project/features/profile/presentation/blocs/bottom_profile_cubit/bottom_profile_cubit.dart';
 import 'package:app_web_project/features/profile/presentation/blocs/profile_cubit/profile_cubit.dart';
@@ -62,4 +64,6 @@ void _configureCubit() {
   inject.registerFactory(() => ProfileCubit(inject(), inject(), inject()));
   inject
       .registerFactory(() => BottomProfileCubit(inject(), inject(), inject()));
+  inject.registerFactory(() => ForgotCubit(inject(), inject(), inject()));
+  inject.registerFactory(() => ChatListBloc());
 }

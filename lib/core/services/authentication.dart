@@ -43,16 +43,18 @@ class Authentication {
         await _firebaseAuth.signInWithCredential(credential);
     User? userDetails = userCredential.user;
     bool user = await _repository.checkUser(userDetails!.uid);
+    UserModel newUser = UserModel(
+        id: userDetails.uid,
+        email: userDetails.email,
+        displayName: userDetails.displayName,
+        imgUrl: userDetails.photoURL);
     if (user == false) {
-      UserModel newUser = UserModel(
-          id: userDetails.uid,
-          email: userDetails.email,
-          displayName: userDetails.displayName,
-          imgUrl: userDetails.photoURL);
-      _repository.registerUser(newUser);
+      await _repository.registerUser(newUser);
       for (int i = 0; i < 5; i++) {
         await _repository.updateUserChatList(userDetails.uid, i.toString());
       }
+    } else {
+      await _repository.updateUserInfo(newUser);
     }
 
     return userDetails;
@@ -72,16 +74,18 @@ class Authentication {
     // Once signed in, return the UserCredential
     User? userDetails = userCredential.user;
     bool user = await _repository.checkUser(userDetails!.uid);
+    UserModel newUser = UserModel(
+        id: userDetails.uid,
+        email: userData['email'],
+        displayName: userData['name'],
+        imgUrl: userData['picture']['data']['url']);
     if (user == false) {
-      UserModel newUser = UserModel(
-          id: userDetails.uid,
-          email: userData['email'],
-          displayName: userData['name'],
-          imgUrl: userData['picture']['data']['url']);
-      _repository.registerUser(newUser);
+      await _repository.registerUser(newUser);
       for (int i = 0; i < 5; i++) {
         await _repository.updateUserChatList(userDetails.uid, i.toString());
       }
+    } else {
+      await _repository.updateUserInfo(newUser);
     }
     return userDetails;
   }
@@ -147,5 +151,9 @@ class Authentication {
 
   Future signOut() async {
     Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
+  }
+
+  Future<void> resetPassword(String email) async {
+    return await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 }

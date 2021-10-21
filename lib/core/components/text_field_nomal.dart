@@ -11,7 +11,7 @@ class TextFieldNormal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 65.h,
-      margin: EdgeInsets.only(top: 10.h, left: 15.w, right: 15.w),
+      margin: EdgeInsets.only(top: 10.h),
       child: TextFormField(
         controller: textEditingController,
         style: TextStyle(

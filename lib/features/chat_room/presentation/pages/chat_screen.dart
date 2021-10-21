@@ -1,8 +1,6 @@
-
 import 'package:app_web_project/core/model/user_model.dart';
 import 'package:app_web_project/core/utils/constaints.dart';
 import 'package:app_web_project/features/chat_room/presentation/blocs/chat_list_bloc/chat_list_bloc.dart';
-import 'package:app_web_project/features/chat_room/presentation/blocs/chat_list_bloc/chat_list_event.dart';
 import 'package:app_web_project/features/chat_room/presentation/blocs/chat_screen_bloc/chat_screen_bloc.dart';
 import 'package:app_web_project/features/chat_room/presentation/blocs/chat_screen_bloc/chat_screen_event.dart';
 import 'package:app_web_project/features/chat_room/presentation/blocs/chat_screen_bloc/chat_screen_state.dart';
@@ -10,6 +8,7 @@ import 'package:app_web_project/features/chat_room/presentation/blocs/search_use
 import 'package:app_web_project/features/chat_room/presentation/blocs/search_user_loc/search_user_event.dart';
 import 'package:app_web_project/features/chat_room/presentation/widgets/chat_list.dart';
 import 'package:app_web_project/features/chat_room/presentation/widgets/search_user.dart';
+import 'package:app_web_project/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -87,10 +86,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                     child: IconButton(
                                       onPressed: () {
-                                        if(searchUserNameController.text!=''){
-                                          BlocProvider.of<ChatScreenBloc>(context)
-                                              .add(ChatScreenEventToSearching(   searchUserNameController.text));
-                                          searchUserNameController.text ='';
+                                        if (searchUserNameController.text !=
+                                            '') {
+                                          BlocProvider.of<ChatScreenBloc>(
+                                                  context)
+                                              .add(ChatScreenEventToSearching(
+                                                  searchUserNameController
+                                                      .text));
+                                          searchUserNameController.text = '';
                                         }
                                       },
                                       icon: Icon(Icons.search),
@@ -129,22 +132,22 @@ class _ChatScreenState extends State<ChatScreen> {
 
   _chatScreenWidget(context, state) {
     if (state is ChatScreenStateLoaded) {
-      return BlocProvider(
-          create: (context) =>
-              ChatListBloc(userModel: widget.userModel)..add(ChatListStart()),
+      ChatListBloc chatListBloc = inject<ChatListBloc>();
+      return BlocProvider<ChatListBloc>(
+          create: (context) => chatListBloc,
           child: WillPopScope(
             onWillPop: () async => true,
             child: ChatListScreen(
               userModel: widget.userModel,
+              chatListBloc: chatListBloc,
             ),
           ));
     } else if (state is ChatScreenStateSearching) {
       return BlocProvider(
         create: (context) => SearchUserBloc()
-          ..add(SearchEventButtonPressed(
-              displayName:state.name)),
+          ..add(SearchEventButtonPressed(displayName: state.name)),
         child: WillPopScope(
-          onWillPop:() async => true,
+          onWillPop: () async => true,
           child: SearchUserScreen(
             user: widget.userModel,
           ),
@@ -164,7 +167,7 @@ class _ChatScreenState extends State<ChatScreen> {
             // ignore: unnecessary_statements
             BlocProvider.of<ChatScreenBloc>(context)
               ..add(ChatScreenEventBack());
-            searchUserNameController.text='';
+            searchUserNameController.text = '';
           },
           icon: Container(width: 50.w, child: Icon(Icons.arrow_back_ios)));
     }
