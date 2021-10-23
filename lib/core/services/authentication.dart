@@ -91,18 +91,10 @@ class Authentication {
   }
 
   Future<User?> signIn(String email, String password) async {
-    try {
-      UserCredential userCredential = await _firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
-      User? userDetails = userCredential.user;
-      return userDetails;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('NO user');
-      } else if (e.code == 'wrong-password') {
-        print('wrong pass');
-      }
-    }
+    UserCredential userCredential = await _firebaseAuth
+        .signInWithEmailAndPassword(email: email, password: password);
+    User? userDetails = userCredential.user;
+    return userDetails;
   }
 
   Future<UserCredential> signUpWithEmailAndPassword(

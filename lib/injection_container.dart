@@ -26,16 +26,12 @@ GetIt inject = GetIt.instance;
 Future<void> init() async {
   _configureCubit();
   _configureRepositoriesImpl();
-  _configureDataSourcesImpl();
   _configureCommon();
-  _configureUseCase();
 }
 
 void _configureCommon() {
   inject.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(inject()));
 }
-
-void _configureDataSourcesImpl() {}
 
 void _configureRepositoriesImpl() {
   inject.registerLazySingleton(() => Authentication(inject()));
@@ -44,7 +40,6 @@ void _configureRepositoriesImpl() {
   inject.registerLazySingleton(() => SongService(inject()));
 }
 
-void _configureUseCase() {}
 void _configureCubit() {
   inject.registerLazySingleton(() => LoadingCubit());
   inject.registerLazySingleton(() => SnackBarCubit());

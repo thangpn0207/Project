@@ -33,8 +33,7 @@
         src="https://connect.facebook.net/en_US/sdk.js"></script>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<!-- Add for Firebase Storage: https://pub.dev/packages/firebase_storage -->
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script> <!-- Add for Firebase Storage: https://pub.dev/packages/firebase_storage -->
 <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-storage.js"></script>
 
 <!-- Add for Cloud Firestore: https://pub.dev/packages/cloud_firestore -->
@@ -140,6 +139,22 @@
 
 </script>
 
+<script>
+ navigator.permissions.query({name: 'microphone'})
+ .then((permissionObj) => {
+  console.log(permissionObj.state);
+ })
+ .catch((error) => {
+  console.log('Got error :', error);
+ })
 
+ navigator.permissions.query({name: 'camera'})
+ .then((permissionObj) => {
+  console.log(permissionObj.state);
+ })
+ .catch((error) => {
+  console.log('Got error :', error);
+ })
+</script>
 </body>
 </html>

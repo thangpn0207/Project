@@ -27,7 +27,7 @@ class Routes {
 
   Future<dynamic> navigateTo(String routeName, {dynamic arguments}) async {
     return navigatorKey.currentState
-        ?.pushNamed(routeName, arguments: arguments);
+        ?.pushNamed(routeName, arguments: arguments, );
   }
 
   Future<dynamic> navigateAndRemove(String routeName,
