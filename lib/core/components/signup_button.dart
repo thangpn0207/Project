@@ -12,9 +12,8 @@ class SignUpButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin:
-            EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w, bottom: 5.h),
-        width: 364.w,
+        margin: EdgeInsets.only(top: 20.h),
+        width: 320.w,
         height: 48.h,
         child: ButtonTheme(
             child: ElevatedButton(

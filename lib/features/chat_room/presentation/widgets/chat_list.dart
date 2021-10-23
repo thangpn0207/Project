@@ -1,9 +1,9 @@
-
 import 'package:app_web_project/core/model/user_model.dart';
 import 'package:app_web_project/features/chat/presentation/blocs/chat_room_bloc/chat_room_bloc.dart';
 import 'package:app_web_project/features/chat/presentation/blocs/chat_room_bloc/chat_room_event.dart';
 import 'package:app_web_project/features/chat/presentation/pages/chat_room_screen.dart';
 import 'package:app_web_project/features/chat_room/presentation/blocs/chat_list_bloc/chat_list_bloc.dart';
+import 'package:app_web_project/features/chat_room/presentation/blocs/chat_list_bloc/chat_list_event.dart';
 import 'package:app_web_project/features/chat_room/presentation/blocs/chat_list_bloc/chat_list_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,14 +14,22 @@ import 'chat_list_title.dart';
 // ignore: must_be_immutable
 class ChatListScreen extends StatefulWidget {
   UserModel userModel;
-
-  ChatListScreen({Key? key, required this.userModel}) : super(key: key);
+  ChatListBloc chatListBloc;
+  ChatListScreen(
+      {Key? key, required this.userModel, required this.chatListBloc})
+      : super(key: key);
 
   @override
   _ChatListScreenState createState() => _ChatListScreenState();
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
+  @override
+  void initState() {
+    widget.chatListBloc.add(ChatListStart(userModel: widget.userModel));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatListBloc, ChatListState>(builder: (context, state) {
@@ -51,6 +59,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       padding: EdgeInsets.only(bottom: 20.h),
                       child: ChatTitle(
                         chatRoomInfo: state.chatList[index],
+                        chatListBloc: widget.chatListBloc,
                       ),
                     ),
                   );

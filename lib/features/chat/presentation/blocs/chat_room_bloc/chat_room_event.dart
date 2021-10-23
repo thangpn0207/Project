@@ -2,6 +2,8 @@
 
 import 'package:app_web_project/core/containts/enum_constants.dart';
 import 'package:app_web_project/core/model/chat_message.dart';
+import 'package:app_web_project/core/model/song.dart';
+import 'package:file_picker/file_picker.dart';
 
 abstract class ChatRoomEvent{}
 class ChatRoomLoad extends ChatRoomEvent{}
@@ -23,4 +25,20 @@ class ReceiveMessage extends ChatRoomEvent{
 }
 class UploadSong extends ChatRoomEvent{
   UploadSong();
+}
+class UploadInfoSong extends ChatRoomEvent{
+  FilePickerResult? filePickerResult;
+  String nameSong;
+  String nameSinger;
+  UploadInfoSong(this.nameSinger,this.nameSong,this.filePickerResult);
+}
+class SetUrlSong extends ChatRoomEvent{
+  Song song;
+  SetUrlSong(this.song);
+}
+class CloseMusic extends ChatRoomEvent{
+  CloseMusic();
+}
+class ImportSongURl extends ChatRoomEvent{
+  ImportSongURl();
 }

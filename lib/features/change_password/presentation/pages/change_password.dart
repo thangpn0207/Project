@@ -57,7 +57,7 @@ class _ChangedPasswordState extends State<ChangedPassword> {
                   height: MediaQuery
                       .of(context)
                       .size
-                      .height,
+                      .height - 60.h,
                   padding: EdgeInsets.symmetric(horizontal: 25.w),
                   decoration: BoxDecoration(
                       image: DecorationImage(

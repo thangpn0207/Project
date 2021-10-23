@@ -17,7 +17,7 @@ class AudioCubit extends Cubit<AudioState> {
   Duration _duration = new Duration();
   Duration _position = new Duration();
   bool isPlaying = true;
-
+  late VoidCallback callbackClose;
   Future<void> openSong(Song song, String roomUrl) async {
 
     emit(AudioStateLoading());
@@ -25,6 +25,7 @@ class AudioCubit extends Cubit<AudioState> {
       final audio = Audio.network(song.songUrl,
           metas:
               Metas(title: song.songName, image: MetasImage.network(roomUrl)));
+      await _assetAudioPlay.stop();
       await _assetAudioPlay.open(audio,
           showNotification: true,
           playInBackground: PlayInBackground.enabled,
@@ -33,8 +34,11 @@ class AudioCubit extends Cubit<AudioState> {
               resumeOthersPlayersAfterDone: true),
           notificationSettings: NotificationSettings(
               seekBarEnabled: false,
-              stopEnabled: false,
+              stopEnabled: true,
               prevEnabled: false,
+              customStopAction: (player){
+                closeAudio();
+              },
               customPlayPauseAction: (player) {
                 _assetAudioPlay.playOrPause();
                 isPlaying = _assetAudioPlay.isPlaying.value;
@@ -78,11 +82,12 @@ class AudioCubit extends Cubit<AudioState> {
     Duration newPosition = _duration * (persen / 100);
     _assetAudioPlay.seek(newPosition);
   }
-
-  @override
-  Future<void> close() {
-    // TODO: implement close
-    _assetAudioPlay.dispose();
-    return super.close();
+  void setCallback(VoidCallback callback){
+    callbackClose =callback;
   }
+  void closeAudio(){
+    _assetAudioPlay.dispose();
+    callbackClose.call();
+  }
+
 }

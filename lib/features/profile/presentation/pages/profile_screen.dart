@@ -126,17 +126,16 @@ UserModel userNull =UserModel(id: """
                     : Container()
               ],
             ),
-            body: SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    TopProfile(
-                      userModel: state.userModel??userNull,
-                    ),
-                    MidProfile(userModel: state.userModel??userNull),
-                    state.userModel!.id==''?BottomProfileNoData():BottomProfile(userId: state.userModel!.id,)
-                  ],
-                ),
+            body: Container(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                children: <Widget>[
+                  TopProfile(
+                    userModel: state.userModel??userNull,
+                  ),
+                  MidProfile(userModel: state.userModel??userNull),
+                  state.userModel!.id==''?Expanded(child: BottomProfileNoData()): Expanded(child: BottomProfile(userId: state.userModel!.id,))
+                ],
               ),
             ),
           );

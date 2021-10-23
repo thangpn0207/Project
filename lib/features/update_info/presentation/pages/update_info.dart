@@ -48,10 +48,10 @@ class _UpdateInfoState extends State<UpdateInfo> {
     return BlocProvider<UpdateInfoCubit>(
       create: (context) => updateInfoCubit,
       child: BlocListener<UpdateInfoCubit, UpdateInfoState>(
-        listener: (context, state) {
+        listener: (context, state) async{
           // TODO: implement listener
           if (state is UpdateInfoSuccess) {
-            showDialogApp(
+           await showDialogApp(
                 context,
                 DiaLogUpdateSuccess(
                     onPress: (){
@@ -75,6 +75,7 @@ class _UpdateInfoState extends State<UpdateInfo> {
               builder: (context, state) {
                 return SingleChildScrollView(
                   child: Container(
+                    height: MediaQuery.of(context).size.height - 40.h,
                     padding: EdgeInsets.symmetric(horizontal: 25.w),
                     decoration: BoxDecoration(
                         image: DecorationImage(
@@ -181,7 +182,8 @@ class _UpdateInfoState extends State<UpdateInfo> {
                             updateInfo(_displayName.text.trim(), _location.text.trim(),
                                 _phone.text.trim(), _age.text.trim());
                           },
-                        )
+                        ),
+
                       ],
                     ),
                   ),

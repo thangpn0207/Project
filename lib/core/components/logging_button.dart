@@ -12,15 +12,19 @@ class LoggingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin:
-            EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w, bottom: 5.h),
-        width: 364.w,
+        margin: EdgeInsets.only(top: 10.h),
         height: 48.h,
+        width: 320.w,
         child: ButtonTheme(
-            child: ElevatedButton(
+            child: ElevatedButton.icon(
           onPressed: _onPressed,
-          child: Text(
-            "Login",
+          icon: Icon(
+            Icons.mail,
+            color: Colors.white,
+            size: 25.sp,
+          ),
+          label: Text(
+            "Login with Email",
             style: TextStyle(color: Colors.white, fontSize: 18.sp),
           ),
           style: ButtonStyle(

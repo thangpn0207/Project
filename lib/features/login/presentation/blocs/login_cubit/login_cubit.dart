@@ -1,10 +1,10 @@
 import 'package:app_web_project/core/blocs/loading_cubit/loading_cubit.dart';
 import 'package:app_web_project/core/blocs/snack_bar_cubit/snack_bar_cubit.dart';
 import 'package:app_web_project/core/containts/enum_constants.dart';
-import 'package:app_web_project/services/authentication.dart';
+import 'package:app_web_project/core/services/authentication.dart';
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
-
 
 part 'login_state.dart';
 
@@ -23,10 +23,9 @@ class LoginCubit extends Cubit<LoginState> {
         await authentication.signIn(email.trim(), password.trim());
         loadingCubit.hideLoading();
         emit(LoginState.success());
-      } catch (e) {
+      } on FirebaseAuthException catch (e) {
         loadingCubit.hideLoading();
-        snackBarCubit.showSnackBar(
-            SnackBarType.warning, e.toString());
+        snackBarCubit.showSnackBar(SnackBarType.warning, e.code);
         emit(LoginState.failure());
       }
     } else {
@@ -45,8 +44,20 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginState.success());
     } catch (e) {
       loadingCubit.hideLoading();
-      snackBarCubit.showSnackBar(
-          SnackBarType.error, "Login fail");
+      snackBarCubit.showSnackBar(SnackBarType.error, "Login fail");
+      emit(LoginState.failure());
+    }
+  }
+
+  Future<void> loginWithFacebook() async {
+    loadingCubit.showLoading();
+    try {
+      await authentication.signInWithFacebook();
+      loadingCubit.hideLoading();
+      emit(LoginState.success());
+    } catch (e) {
+      loadingCubit.hideLoading();
+      snackBarCubit.showSnackBar(SnackBarType.error, "Login fail");
       emit(LoginState.failure());
     }
   }

@@ -1,9 +1,10 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:app_web_project/core/blocs/loading_cubit/loading_cubit.dart';
 import 'package:app_web_project/core/blocs/snack_bar_cubit/snack_bar_cubit.dart';
 import 'package:app_web_project/core/containts/enum_constants.dart';
-import 'package:app_web_project/services/repository_service.dart';
+import 'package:app_web_project/core/services/repository_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,8 +13,8 @@ import 'package:meta/meta.dart';
 part 'upload_avatar_state.dart';
 
 class UploadAvatarCubit extends Cubit<UploadAvatarState> {
-   LoadingCubit loadingCubit;
-   Repository repository;
+  LoadingCubit loadingCubit;
+  Repository repository;
   SnackBarCubit snackBarCubit;
 
   UploadAvatarCubit(this.loadingCubit, this.repository, this.snackBarCubit)
@@ -28,16 +29,18 @@ class UploadAvatarCubit extends Cubit<UploadAvatarState> {
       PickedFile? pickedFile =
           await ImagePicker().getImage(source: ImageSource.gallery);
       if (pickedFile != null) {
-        final File imageFile = File(pickedFile.path);
+        Uint8List? file = await pickedFile.readAsBytes();
         loadingCubit.showLoading();
-        String? imgSrc = await repository.sendImgToDB(imageFile);
+        String? imgSrc = await repository.sendImgToDBWeb(file);
         if (imgSrc != null) {
           loadingCubit.hideLoading();
           emit(state.copyWith(imgSrc));
         } else {
+          loadingCubit.hideLoading();
           snackBarCubit.showSnackBar(SnackBarType.error, 'Can not pick image');
         }
       } else {
+        loadingCubit.hideLoading();
         snackBarCubit.showSnackBar(SnackBarType.error, 'Can not pick image');
       }
     } else {
@@ -53,10 +56,12 @@ class UploadAvatarCubit extends Cubit<UploadAvatarState> {
               loadingCubit.hideLoading();
               emit(state.copyWith(imgSrc));
             } else {
+              loadingCubit.showLoading();
               snackBarCubit.showSnackBar(
                   SnackBarType.error, 'Can not pick image');
             }
           } else {
+            loadingCubit.showLoading();
             snackBarCubit.showSnackBar(
                 SnackBarType.error, 'Can not pick image');
           }
@@ -65,7 +70,7 @@ class UploadAvatarCubit extends Cubit<UploadAvatarState> {
         case PickImageType.gallery:
           PickedFile? pickedFile =
               await ImagePicker().getImage(source: ImageSource.gallery);
-          if (pickedFile != null ) {
+          if (pickedFile != null) {
             final File imageFile = File(pickedFile.path);
             loadingCubit.showLoading();
             String? imgSrc = await repository.sendImgToDB(imageFile);
@@ -73,10 +78,12 @@ class UploadAvatarCubit extends Cubit<UploadAvatarState> {
               loadingCubit.hideLoading();
               emit(state.copyWith(imgSrc));
             } else {
+              loadingCubit.showLoading();
               snackBarCubit.showSnackBar(
                   SnackBarType.error, 'Can not pick image');
             }
           } else {
+            loadingCubit.showLoading();
             snackBarCubit.showSnackBar(
                 SnackBarType.error, 'Can not pick image');
           }
