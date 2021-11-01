@@ -35,7 +35,8 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
               SnackBarType.error, "Wrong Confirm Password");
         }
       } else {
-        snackBarCubit.showSnackBar(SnackBarType.error, "Wrong password");
+        snackBarCubit.showSnackBar(
+            SnackBarType.error, "New password is the same with old password");
       }
     } else {
       snackBarCubit.showSnackBar(SnackBarType.error, "You forgot something");

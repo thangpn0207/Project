@@ -25,7 +25,8 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LoginState.success());
       } on FirebaseAuthException catch (e) {
         loadingCubit.hideLoading();
-        snackBarCubit.showSnackBar(SnackBarType.warning, e.code);
+        snackBarCubit.showSnackBar(
+            SnackBarType.warning, 'Email or Password is not true');
         emit(LoginState.failure());
       }
     } else {

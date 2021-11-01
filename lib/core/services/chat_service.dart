@@ -108,7 +108,9 @@ class ChatService {
     snapShot.docs.forEach((doc) {
       result.add(ChatMessage(
           type: doc['type'],
-          message: utf8.decode(base64.decode(doc['message'])),
+          message: doc['type'] == "text"
+              ? utf8.decode(base64.decode(doc['message']))
+              : doc['message'],
           sendBy: doc['sendBy'],
           lastMessageTs: doc['lastMessageTs']));
     });
